@@ -61,10 +61,10 @@ public:
 
 			vertexShader = GLVertexShaderLoader("Shader\\BasicMaterialVertexShader.glsl");
 			fragmentShader = GLFragmentShaderLoader("Shader\\BasicMaterialFragmentShader.glsl");
-
-			vertexShader.Load();
-			fragmentShader.Load();
 		}
+
+		vertexShader.Load();
+		fragmentShader.Load();
 
 		this->CreateProgram(vertexShader, fragmentShader);
 	}
