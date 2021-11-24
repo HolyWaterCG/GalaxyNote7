@@ -1,0 +1,41 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31911.196
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GalaxyNote7", "GalaxyNote7.vcxproj", "{96F79299-83B0-4B70-B771-84564F747687}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GLEngine", "GLEngine\GLEngine.vcxproj", "{7EACF005-FE1F-49F9-BEAC-EB72C7A8FCC2}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{96F79299-83B0-4B70-B771-84564F747687}.Debug|x64.ActiveCfg = Debug|x64
+		{96F79299-83B0-4B70-B771-84564F747687}.Debug|x64.Build.0 = Debug|x64
+		{96F79299-83B0-4B70-B771-84564F747687}.Debug|x86.ActiveCfg = Debug|Win32
+		{96F79299-83B0-4B70-B771-84564F747687}.Debug|x86.Build.0 = Debug|Win32
+		{96F79299-83B0-4B70-B771-84564F747687}.Release|x64.ActiveCfg = Release|x64
+		{96F79299-83B0-4B70-B771-84564F747687}.Release|x64.Build.0 = Release|x64
+		{96F79299-83B0-4B70-B771-84564F747687}.Release|x86.ActiveCfg = Release|Win32
+		{96F79299-83B0-4B70-B771-84564F747687}.Release|x86.Build.0 = Release|Win32
+		{7EACF005-FE1F-49F9-BEAC-EB72C7A8FCC2}.Debug|x64.ActiveCfg = Debug|x64
+		{7EACF005-FE1F-49F9-BEAC-EB72C7A8FCC2}.Debug|x64.Build.0 = Debug|x64
+		{7EACF005-FE1F-49F9-BEAC-EB72C7A8FCC2}.Debug|x86.ActiveCfg = Debug|Win32
+		{7EACF005-FE1F-49F9-BEAC-EB72C7A8FCC2}.Debug|x86.Build.0 = Debug|Win32
+		{7EACF005-FE1F-49F9-BEAC-EB72C7A8FCC2}.Release|x64.ActiveCfg = Release|x64
+		{7EACF005-FE1F-49F9-BEAC-EB72C7A8FCC2}.Release|x64.Build.0 = Release|x64
+		{7EACF005-FE1F-49F9-BEAC-EB72C7A8FCC2}.Release|x86.ActiveCfg = Release|Win32
+		{7EACF005-FE1F-49F9-BEAC-EB72C7A8FCC2}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7720C1F2-21D8-47D6-A342-24C0C9BDC5F2}
+	EndGlobalSection
+EndGlobal
