@@ -36,8 +36,8 @@ public:
 		UpdateRotation();
 		UpdateScale();
 
-		UpdateWorldToLocalMatrix();
 		UpdateLocalToWorldMatrix();
+		UpdateWorldToLocalMatrix();
 	}
 
 	void UpdatePosition()
@@ -45,7 +45,7 @@ public:
 		this->Position = this->LocalPosition;
 		if (this->Parent != nullptr)
 		{
-			this->Position = this->Parent->LocalToWorldMatrix * glm::vec4(this->LocalPosition, 1.0f);
+			this->Position = this->Parent->LocalToWorldMatrix * glm::vec4(this->Position, 1.0f);
 		}
 	}
 
@@ -54,7 +54,7 @@ public:
 		this->Rotation = this->LocalRotation;
 		if (this->Parent != nullptr)
 		{
-			this->Rotation = this->Parent->Rotation * this->LocalRotation;
+			this->Rotation = this->Parent->Rotation * this->Rotation;
 		}
 	}
 
@@ -63,12 +63,18 @@ public:
 		this->Scale = this->LocalScale;
 		if (this->Parent != nullptr)
 		{
-			this->Scale = this->Parent->Scale * this->LocalScale;
+			this->Scale = this->Parent->Scale * this->Scale;
 		}
 	}
 
 	void UpdateLocalToWorldMatrix()
 	{
+		if (this->Parent == nullptr)
+		{
+			this->LocalToWorldMatrix = glm::mat4(1.0f);
+			return;
+		}
+
 		glm::mat4 scaleMatrix = glm::scale(this->Scale);
 		glm::mat4 rotationMatrix = glm::toMat4(this->Rotation);
 		glm::mat4 translationMatrix = glm::translate(glm::mat4(1.0f), this->Position);
@@ -120,10 +126,15 @@ public:
 
 	glm::mat4 GetLocalToWorldMatrix()
 	{
-		return 
-			glm::scale(this->GetScale()) *
+		if (this->Parent == nullptr)
+		{
+			return glm::mat4(1.0f);
+		}
+
+		return
+			glm::translate(glm::mat4(1.0f), this->GetPosition()) *
 			glm::toMat4(this->GetRotation()) *
-			glm::translate(glm::mat4(1.0f), this->GetPosition());
+			glm::scale(this->GetScale());
 	}
 
 	glm::mat4 GetWorldToLocalMatrix()
@@ -402,10 +413,11 @@ public:
 	void RotateAround(const glm::vec3& point, float angle, const glm::vec3& axis)
 	{
 		auto worldPosition = this->GetPosition();
+		auto diff = worldPosition - point;
 
-		glm::quat rotation = glm::normalize(glm::angleAxis(angle, axis));
+		glm::quat rotation = glm::angleAxis(angle, axis);
 
-		this->SetPosition(point + rotation * (worldPosition - point));
+		this->SetPosition(point + glm::rotate(rotation, (worldPosition - point)));
 		this->Rotate(angle, axis);
 	}
 

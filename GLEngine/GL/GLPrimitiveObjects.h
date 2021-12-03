@@ -113,7 +113,7 @@ class GLineCone : public GLGameObject
 {
 public:
 	GConstructor(GLineCone,
-		unsigned int vertices = 32, const GLColor& color = GLColor(1.0f, 1.0f, 1.0f))
+		unsigned int vertices = 32, const GLColor& color = GLColor(1.0f, 1.0f, 1.0f)) 
 		: GSuperClassInitializer(GLGameObject)
 	{
 		auto meshRenderer = this->GetMeshRenderer();

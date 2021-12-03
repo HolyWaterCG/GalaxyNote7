@@ -26,6 +26,7 @@ public:
 	static const GLsizei COLOR_DATA_SIZE = 4 * sizeof(GLfloat);
 	static const GLsizei NORMAL_DATA_SIZE = 4 * sizeof(GLfloat);
 	static const GLsizei INDEX_DATA_SIZE = 1 * sizeof(GLuint);
+	static const GLsizei UV_DATA_SIZE = 2 * sizeof(GLfloat);
 public:
 	GLMesh()
 	{
@@ -34,6 +35,7 @@ public:
 		glGenBuffers(1, &this->vertexBufferId);
 		glGenBuffers(1, &this->colorBufferId);
 		glGenBuffers(1, &this->normalBufferId);
+		glGenBuffers(1, &this->uvBufferId);
 		glGenBuffers(1, &this->indexBufferId);
 	}
 
@@ -43,6 +45,7 @@ public:
 		glDeleteBuffers(1, &this->vertexBufferId);
 		glDeleteBuffers(1, &this->colorBufferId);
 		glDeleteBuffers(1, &this->normalBufferId);
+		glDeleteBuffers(1, &this->uvBufferId);
 		glDeleteBuffers(1, &this->indexBufferId);
 
 		glDeleteVertexArrays(1, &this->vertexArrayId);
@@ -52,15 +55,15 @@ public:
 	{
 		glBindVertexArray(this->vertexArrayId);
 
-		GLsizei vertexBufferSize = VERTEX_DATA_SIZE * this->vertices.size();
+		GLsizei vertexBufferSize = VERTEX_DATA_SIZE * this->indices.size();
 		GLintptr vertexBufferOffset = 0;
 
 		glBindBuffer(GL_ARRAY_BUFFER, this->vertexBufferId);
 		glBufferData(GL_ARRAY_BUFFER, vertexBufferSize, NULL, GL_STATIC_DRAW);
 
-		for (const auto& vertex : this->vertices)
+		for (const auto& index : this->indices)
 		{
-			auto vPosition = glm::vec4(vertex, 1.0f);
+			auto vPosition = glm::vec4(this->vertices[index], 1.0f);
 
 			GLfloat data[4] = { vPosition.x, vPosition.y, vPosition.z, vPosition.w };
 
@@ -78,7 +81,7 @@ public:
 	{
 		glBindVertexArray(this->vertexArrayId);
 
-		GLsizei colorBufferSize = COLOR_DATA_SIZE * this->vertices.size();
+		GLsizei colorBufferSize = COLOR_DATA_SIZE * this->colors.size();
 		GLintptr colorBufferOffset = 0;
 
 		glBindBuffer(GL_ARRAY_BUFFER, this->colorBufferId);
@@ -117,37 +120,39 @@ public:
 			glBufferSubData(GL_ARRAY_BUFFER, normalBufferOffset, NORMAL_DATA_SIZE, data);
 			normalBufferOffset += NORMAL_DATA_SIZE;
 		}
+
 		glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, 0, 0);
 		glEnableVertexAttribArray(2);
 
 		glBindVertexArray(0);
 	}
 
-	void UpdateIndexBuffer()
+	void UpdateUVBuffer()
 	{
 		glBindVertexArray(this->vertexArrayId);
 
-		GLsizei indexBufferSIze = INDEX_DATA_SIZE * this->indices.size();
-		GLintptr indexBufferOffset = 0;
+		GLsizei uvBufferSize = UV_DATA_SIZE * this->uvs.size();
+		GLintptr uvBufferOffset = 0;
 
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->indexBufferId);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexBufferSIze, NULL, GL_STATIC_DRAW);
+		glBindBuffer(GL_ARRAY_BUFFER, this->uvBufferId);
+		glBufferData(GL_ARRAY_BUFFER, uvBufferSize, NULL, GL_STATIC_DRAW);
 
-		for (const auto& index : this->indices)
+		for (const auto& uv : this->uvs)
 		{
-			glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, indexBufferOffset, INDEX_DATA_SIZE, &index);
-			indexBufferOffset += INDEX_DATA_SIZE;
+			GLfloat data[2] = { uv.x, uv.y };
+			glBufferSubData(GL_ARRAY_BUFFER, uvBufferOffset, UV_DATA_SIZE, data);
+			uvBufferOffset += UV_DATA_SIZE;
 		}
-
-		glBindVertexArray(0);
+		glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, 0, 0);
+		glEnableVertexAttribArray(3);
 	}
 
 	void Update()
 	{
 		this->UpdateVertexBuffer();
 		this->UpdateColorBuffer();
-		this->UpdateNormalBuffer();
-		this->UpdateIndexBuffer();
+		this->UpdateNormalBuffer();		
+		this->UpdateUVBuffer();
 	}
 
 	virtual void Render()
@@ -162,7 +167,7 @@ public:
 
 		if (this->indices.size() > 0)
 		{
-			glDrawElements((GLenum)this->drawMode, this->indices.size(), GL_UNSIGNED_INT, (GLvoid*)0);
+			glDrawArrays((GLenum)this->drawMode, 0, this->indices.size());
 		}
 
 		glBindVertexArray(0);
@@ -377,6 +382,72 @@ public:
 		this->updated = true;
 	}
 
+	glm::vec2 GetUV(int arrayIndex)
+	{
+		assert(arrayIndex >= 0 && arrayIndex < this->uvs.size());
+
+		return this->uvs.at(arrayIndex);
+	}
+
+	std::vector<glm::vec2>& GetUVs()
+	{
+		return this->uvs;
+	}
+
+	glm::vec2 SetUV(int arrayIndex, const glm::vec2& uv)
+	{
+		assert(arrayIndex >= 0 && arrayIndex < this->uvs.size());
+
+		this->uvs.at(arrayIndex) = uv;
+
+		this->updated = true;
+	}
+
+	void AddUV(const glm::vec2& uv)
+	{
+		this->uvs.push_back(uv);
+
+		this->updated = true;
+	}
+
+	void AddUVs(const std::initializer_list<glm::vec2>& uvs)
+	{
+		this->uvs.insert(this->uvs.end(), uvs);
+
+		this->updated = true;
+	}
+
+	void RemoveUV(int arrayIndex)
+	{
+		assert(arrayIndex >= 0 && arrayIndex < this->uvs.size());
+
+		this->vertices.erase(this->vertices.begin() + arrayIndex);
+
+		this->updated = true;
+	}
+
+	void RemoveUVs(const std::initializer_list<int>& uvIndices)
+	{
+		for (auto index : uvIndices)
+		{
+			this->RemoveUV(index);
+		}
+
+		this->updated = true;
+	}
+
+	size_t GetUVCount()
+	{
+		return this->uvs.size();
+	}
+
+	void ClearUVs()
+	{
+		this->uvs.clear();
+
+		this->updated = true;
+	}
+
 	GLuint GetIndex(int arrayIndex)
 	{
 		assert(arrayIndex >= 0 && arrayIndex < this->indices.size());
@@ -436,18 +507,21 @@ public:
 		this->updated = true;
 	}
 
-private:
+protected:
 	std::vector<glm::vec3> vertices;
 	std::vector<GLColor> colors;
 	std::vector<glm::vec3> normals;
 	std::vector<GLuint> indices;
+	std::vector<glm::vec2> uvs;
 
+private:
 	unsigned int vertexArrayId;
 
 	unsigned int vertexBufferId;
 	unsigned int colorBufferId;
 	unsigned int normalBufferId;
 	unsigned int indexBufferId;
+	unsigned int uvBufferId;
 
 	GLMeshDrawMode drawMode = GLMeshDrawMode::Triangle;
 

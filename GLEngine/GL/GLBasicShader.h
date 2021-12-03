@@ -4,47 +4,36 @@
 
 class GLBasicShader : public GLShader
 {
+private:
+	static GLVertexShaderLoader vertexShader;
+	static GLFragmentShaderLoader fragmentShader;
+	static bool initialized;
 public:
     GLBasicShader()
 	{
-		static std::string vertexSource =
-			"#version 330 core\n"
-			"layout(location = 0) in vec4 in_Position;\n"
-			"layout(location = 1) in vec4 in_Color;\n"
-			"layout(location = 2) in vec4 in_Normal;\n"
-			"out vec4 out_Color;\n"
-			"uniform mat4 model;\n"
-			"uniform mat4 view;\n"
-			"uniform mat4 projection;\n"
-			"void main() {\n"
-			"    gl_Position = projection * view * model * in_Position;\n"
-			"    out_Color = in_Color;\n"
-			"}\n";
+		if (!initialized)
+		{
+			initialized = true;
 
-		static std::string fragmentSource =
-			"#version 330 core\n"
-			"in vec4 out_Color;\n"
-			"out vec4 fragColor;\n"
-			"void main() {\n"
-			"    fragColor = vec4(out_Color);\n"
-			"}\n";
+			vertexShader = GLVertexShaderLoader("shaders\\BasicVertexShader.glsl");
+			fragmentShader = GLFragmentShaderLoader("shaders\\BasicFragmentShader.glsl");
 
-		GLVertexShaderLoader vertexShader;
-		vertexShader.SetSource(vertexSource);
-		vertexShader.Load();
-
-		GLFragmentShaderLoader fragmentShader;
-		fragmentShader.SetSource(fragmentSource);
-		fragmentShader.Load();
+			vertexShader.Load();
+			fragmentShader.Load();
+		}
 
 		this->CreateProgram(vertexShader, fragmentShader);
 	}
 
 	virtual ~GLBasicShader()
 	{
-		glDeleteProgram(this->GetId());
+
 	}
 };
+
+GLVertexShaderLoader GLBasicShader::vertexShader;
+GLFragmentShaderLoader GLBasicShader::fragmentShader;
+bool GLBasicShader::initialized = false;
 
 class GLBasicMaterialShader : public GLShader
 {
@@ -59,12 +48,12 @@ public:
 		{
 			initialized = true;
 
-			vertexShader = GLVertexShaderLoader("Shader\\BasicMaterialVertexShader.glsl");
-			fragmentShader = GLFragmentShaderLoader("Shader\\BasicMaterialFragmentShader.glsl");
-		}
+			vertexShader = GLVertexShaderLoader("shaders\\BasicMaterialVertexShader.glsl");
+			fragmentShader = GLFragmentShaderLoader("shaders\\BasicMaterialFragmentShader.glsl");
 
-		vertexShader.Load();
-		fragmentShader.Load();
+			vertexShader.Load();
+			fragmentShader.Load();
+		}
 
 		this->CreateProgram(vertexShader, fragmentShader);
 	}
@@ -78,3 +67,69 @@ public:
 GLVertexShaderLoader GLBasicMaterialShader::vertexShader;
 GLFragmentShaderLoader GLBasicMaterialShader::fragmentShader;
 bool GLBasicMaterialShader::initialized = false;
+
+class GLBasicTextureShader : public GLShader
+{
+private:
+	static GLVertexShaderLoader vertexShader;
+	static GLFragmentShaderLoader fragmentShader;
+	static bool initialized;
+public:
+	GLBasicTextureShader()
+	{
+		if (!initialized)
+		{
+			initialized = true;
+
+			vertexShader = GLVertexShaderLoader("shaders\\BasicTextureVertexShader.glsl");
+			fragmentShader = GLFragmentShaderLoader("shaders\\BasicTextureFragmentShader.glsl");
+
+			vertexShader.Load();
+			fragmentShader.Load();
+		}
+
+		this->CreateProgram(vertexShader, fragmentShader);
+	}
+
+	virtual ~GLBasicTextureShader()
+	{
+
+	}
+};
+
+GLVertexShaderLoader GLBasicTextureShader::vertexShader;
+GLFragmentShaderLoader GLBasicTextureShader::fragmentShader;
+bool GLBasicTextureShader::initialized = false;
+
+class GLBasicTextureMaterialShader : public GLShader
+{
+private:
+	static GLVertexShaderLoader vertexShader;
+	static GLFragmentShaderLoader fragmentShader;
+	static bool initialized;
+public:
+	GLBasicTextureMaterialShader()
+	{
+		if (!initialized)
+		{
+			initialized = true;
+
+			vertexShader = GLVertexShaderLoader("shaders\\BasicTextureMaterialVertexShader.glsl");
+			fragmentShader = GLFragmentShaderLoader("shaders\\BasicTextureMaterialFragmentShader.glsl");
+
+			vertexShader.Load();
+			fragmentShader.Load();
+		}
+
+		this->CreateProgram(vertexShader, fragmentShader);
+	}
+
+	virtual ~GLBasicTextureMaterialShader()
+	{
+
+	}
+};
+
+GLVertexShaderLoader GLBasicTextureMaterialShader::vertexShader;
+GLFragmentShaderLoader GLBasicTextureMaterialShader::fragmentShader;
+bool GLBasicTextureMaterialShader::initialized = false;

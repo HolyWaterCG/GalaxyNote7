@@ -174,18 +174,18 @@ void RandMaterial(const GLSharedPtr<GLGameObject>& gameObject)
 {
 	auto material = gameObject->GetMeshRenderer()->GetMaterial();
 
-	material->SetVector("ambient", Rand3v(0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f));
-	material->SetVector("diffuse", Rand3v(0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f));
-	material->SetVector("specular", Rand3v(0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f));
-	material->SetFloat("shininess", Rand(0.0f, 128.0f));
+	material->SetAmbient(Rand3v(0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f));
+	material->SetDiffuse(Rand3v(0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f));
+	material->SetSpecular(Rand3v(0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f));
+	material->SetShininess(Rand(0.0f, 128.0f));
 }
 
 void RandMaterial(GLGameObject* gameObject)
 {
 	auto material = gameObject->GetMeshRenderer()->GetMaterial();
 
-	material->SetVector("ambient", Rand3v(0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f));
-	material->SetVector("diffuse", Rand3v(0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f));
-	material->SetVector("specular", Rand3v(0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f));
-	material->SetFloat("shininess", Rand(0.0f, 128.0f));
+	material->SetAmbient(Rand3v(0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f));
+	material->SetDiffuse(Rand3v(0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f));
+	material->SetSpecular(Rand3v(0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f));
+	material->SetShininess(Rand(0.0f, 128.0f));
 }

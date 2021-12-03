@@ -9,6 +9,7 @@
 #include "GLColor.h"
 #include "GLShader.h"
 #include "GLBasicShader.h"
+#include "GLTexture.h"
 
 
 
@@ -18,26 +19,61 @@ public:
 	GLMaterial()
 	{
 		this->shader = GLCreate<GLBasicMaterialShader>();
-
-		this->vectors["ambient"] = glm::vec3(1.0f);
-		this->vectors["diffuse"] = glm::vec3(1.0f);
-		this->vectors["specular"] = glm::vec3(1.0f);
-		this->floats["shininess"] = 1.0f;
 	}
 
 	GLMaterial(const glm::vec3& ambient, const glm::vec3& diffuse, const glm::vec3& specular, float shininess)
 	{
 		this->shader = GLCreate<GLBasicMaterialShader>();
 
-		this->vectors["ambient"] = ambient;
-		this->vectors["diffuse"] = diffuse;
-		this->vectors["specular"] = specular;
-		this->floats["shininess"] = shininess;
+		this->ambient = ambient;
+		this->diffuse = diffuse;
+		this->specular = specular;
+		this->shininess = shininess;
 	}
 
 	virtual ~GLMaterial()
 	{
 
+	}
+
+	glm::vec3 GetAmbient()
+	{
+		return this->ambient;
+	}
+
+	glm::vec3 GetDiffuse()
+	{
+		return this->diffuse;
+	}
+
+	glm::vec3 GetSpecular()
+	{
+		return this->specular;
+	}
+
+	float GetShininess()
+	{
+		return this->shininess;
+	}
+
+	void SetAmbient(const glm::vec3& ambient)
+	{
+		this->ambient = ambient;
+	}
+
+	void SetDiffuse(const glm::vec3& diffuse)
+	{
+		this->diffuse = diffuse;
+	}
+
+	void SetSpecular(const glm::vec3& specular)
+	{
+		this->specular = specular;
+	}
+
+	void SetShininess(float shininess)
+	{
+		this->shininess = shininess;
 	}
 
 	GLSharedPtr<GLShader> GetShader()
@@ -50,102 +86,71 @@ public:
 		this->shader = shader;
 	}
 
+	GLSharedPtr<GLTexture> GetDiffuseMap()
+	{
+		return this->diffuseMap;
+	}
+
+	void SetDiffuseMap(const GLSharedPtr<GLTexture>& diffuseMap)
+	{
+		if (this->diffuseMap == nullptr && diffuseMap != nullptr)
+		{
+			this->shader = GLCreate<GLBasicTextureMaterialShader>();
+		}
+		else if (diffuseMap == nullptr)
+		{
+			this->shader = GLCreate<GLBasicMaterialShader>();
+		}
+
+		this->diffuseMap = diffuseMap;
+	}
+
 	void Use()
 	{
 		this->shader->Use();
 
-		for (const auto& item : this->ints)
+		int ambientUniform = this->shader->GetUniformLocation("material.ambient");
+		int diffuseUniform = this->shader->GetUniformLocation("material.diffuse");
+		int specularUniform = this->shader->GetUniformLocation("material.specular");
+		int shininessUniform = this->shader->GetUniformLocation("material.shininess");
+
+		if (this->diffuseMap != nullptr)
 		{
-			std::string name = "material." + item.first;
-			if (this->shader->GetUniformLocation(name) > 0)
+			this->shader->SetUniform("material.diffuse", 0);
+			this->diffuseMap->Use();
+		}
+		else
+		{
+			if (ambientUniform > 0)
 			{
-				this->shader->SetUniform(name, item.second);
+				this->shader->SetUniform(ambientUniform, this->ambient);
+			}
+
+			if (diffuseUniform > 0)
+			{
+				this->shader->SetUniform(diffuseUniform, this->diffuse);
 			}
 		}
 
-		for (const auto& item : this->floats)
+		if (specularUniform > 0)
 		{
-			std::string name = "material." + item.first;
-			if (this->shader->GetUniformLocation(name) > 0)
-			{
-				this->shader->SetUniform(name, item.second);
-			}
+			this->shader->SetUniform(specularUniform, this->specular);
 		}
 
-		for (const auto& item : this->vectors)
+		if (shininessUniform > 0)
 		{
-			std::string name = "material." + item.first;
-			if (this->shader->GetUniformLocation(name) > 0)
-			{
-				this->shader->SetUniform(name, item.second);
-			}
+			this->shader->SetUniform(shininessUniform, this->shininess);
 		}
-
-		for (const auto& item : this->matrices)
-		{
-			std::string name = "material." + item.first;
-			if (this->shader->GetUniformLocation(name) > 0)
-			{
-				this->shader->SetUniform(name, item.second);
-			}
-		}
-	}
-
-	int GetInt(const std::string& name)
-	{
-		assert(this->ints.find(name) != this->ints.end());
-
-		return this->ints[name];
-	}
-	
-	void SetInt(const std::string& name, int value)
-	{
-		this->ints[name] = value;
-	}
-
-	float GetFloat(const std::string& name)
-	{
-		assert(this->floats.find(name) != this->floats.end());
-
-		return this->floats[name];
-	}
-
-	void SetFloat(const std::string& name, float value)
-	{
-		this->floats[name] = value;
-	}
-
-	glm::vec3 GetVector(const std::string& name)
-	{
-		assert(this->vectors.find(name) != this->vectors.end());
-
-		return this->vectors[name];
-	}
-
-	void SetVector(const std::string& name, const glm::vec3& value)
-	{
-		this->vectors[name] = value;
-	}
-
-	glm::mat4 GetMatrix(const std::string& name)
-	{
-		assert(this->matrices.find(name) != this->matrices.end());
-
-		return this->matrices[name];
-	}
-
-	void SetMatrix(const std::string & name, const glm::mat4& matrix)
-	{
-		this->matrices[name] = matrix;
 	}
 
 private:
-	std::unordered_map<std::string, int> ints;
-	std::unordered_map<std::string, float> floats;
-	std::unordered_map<std::string, glm::vec3> vectors;
-	std::unordered_map<std::string, glm::mat4> matrices;
+	glm::vec3 ambient = glm::vec3(1.0f);
+	glm::vec3 diffuse = glm::vec3(1.0f);
+	glm::vec3 specular = glm::vec3(1.0f);
+	float shininess = 0.0f;
 
-	GLSharedPtr<GLShader> shader;
+	GLSharedPtr<GLShader> shader = nullptr;
+	GLSharedPtr<GLTexture> diffuseMap = nullptr;
 };
 
 std::unordered_map<std::string, GLSharedPtr<GLMaterial>> __GLPredefinedMaterials;

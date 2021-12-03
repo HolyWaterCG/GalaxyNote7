@@ -91,7 +91,28 @@ public:
 		shader->SetUniform("pointLightCount", pointCount);
 		shader->SetUniform("spotLightCount", spotCount);
 
+		if (this->DoBlend())
+		{
+			glEnable(GL_BLEND);
+			glBlendFunc(this->blendSFactor, this->blendDFactor);
+		}
+
+		if (this->DoCullFace())
+		{
+			glEnable(GL_CULL_FACE);
+		}
+
 		this->mesh->Render();
+
+		if (glIsEnabled(GL_BLEND))
+		{
+			glDisable(GL_BLEND);
+		}
+
+		if (glIsEnabled(GL_CULL_FACE))
+		{
+			glDisable(GL_CULL_FACE);
+		}
 	}
 
 	GLSharedPtr<GLMesh>& GetMesh()
@@ -114,7 +135,53 @@ public:
 		this->material = material;
 	}
 
+	bool DoBlend()
+	{
+		return this->bBlend;
+	}
+
+	void SetBlend(bool blend)
+	{
+		this->bBlend = blend;
+	}
+
+	GLenum GetBlendSFactor()
+	{
+		return this->blendSFactor;
+	}
+
+	void SetBlendSFactor(GLenum sFactor)
+	{
+		this->blendSFactor = sFactor;
+	}
+
+	GLenum GetBlendDFactor()
+	{
+		return this->blendDFactor;
+	}
+
+	void SetBlendDFactor(GLenum dFactor)
+	{
+		this->blendDFactor = dFactor;
+	}
+
+	bool DoCullFace()
+	{
+		return this->bCullFace;
+	}
+
+	void SetCullFace(bool cullFace)
+	{
+		this->bCullFace = cullFace;
+	}
+
 private:
 	GLSharedPtr<GLMesh> mesh = nullptr;
 	GLSharedPtr<GLMaterial> material = nullptr;
+
+	bool bBlend = false;
+	bool bCullFace = true;
+
+	GLenum blendSFactor = GL_SRC_ALPHA;
+	GLenum blendDFactor = GL_ONE_MINUS_SRC_ALPHA;
 };

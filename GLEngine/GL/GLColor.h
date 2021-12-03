@@ -6,6 +6,7 @@
 
 #include <random>
 #include <array>
+#include <ctime>
 
 struct GLColor
 {

@@ -116,15 +116,17 @@ public:
 		}
 	};
 
-	void Render(const std::string& layer, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix, const glm::vec3& cameraPosition,
+	virtual void Render(const std::string& layer, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix, const glm::vec3& cameraPosition,
 		        const std::vector<GLSharedPtr<GLLight>>& lights)
 	{
-		if (layer != this->layer)
+		if (this->transform == nullptr)
 		{
 			return;
 		}
 
-		if (this->transform == nullptr)
+		this->transform->Update();
+
+		if (layer != this->layer)
 		{
 			return;
 		}
@@ -133,8 +135,6 @@ public:
 		{
 			return;
 		}
-
-		this->transform->Update();
 
 		for (auto& child : this->Children)
 		{
