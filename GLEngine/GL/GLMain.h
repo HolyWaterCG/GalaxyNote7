@@ -75,7 +75,7 @@ public:
 	int SetTimeout(int Msec, std::function<void()> Callback);
 
 	int SetInterval(int Msec, std::function<void()> Callback);
-	GLboolean ClearInterval(int id);
+	bool ClearInterval(int id);
 
 	GLSharedPtr<GLCallback> GetCallback(int id);
 
@@ -83,39 +83,59 @@ public:
 
 	void Exit();
 
-	GLSharedPtr<GLWindow> Window;
-	GLSharedPtr<GLScene> Scene;
+	GLSharedPtr<GLWindow> GetWindow()
+	{
+		return this->window;
+	}
 
-	GLKeyMapper KeyMapper;
+	void SetWindow(const GLSharedPtr<GLWindow>& window)
+	{
+		this->window = window;
+	}
+
+	GLSharedPtr<GLScene> GetScene()
+	{
+		return this->scene;
+	}
+
+	void SetScene(const GLSharedPtr<GLScene>& scene)
+	{
+		this->scene = scene;
+	}
+
 private:
-	std::unordered_map<int, GLSharedPtr<GLCallback>> Callbacks;
-	int UniqueIdProvider = 1;
+	GLSharedPtr<GLWindow> window;
+	GLSharedPtr<GLScene> scene;
 
-	int MouseButton = -1;
-	int MouseX = 0;
-	int MouseY = 0;
+	GLKeyMapper keyMapper;
+
+	std::unordered_map<int, GLSharedPtr<GLCallback>> callbacks;
+	int uniqueIdProvider = 1;
+
+	int mouseButton = -1;
+	int mouseX = 0;
+	int mouseY = 0;
 };
 
-GLSharedPtr<GLScene>& GLCurrentScene()
+GLSharedPtr<GLScene> GLGetCurrentScene()
 {
-	return GLMain::GetInstance()->Scene;
+	return GLMain::GetInstance()->GetScene();
 }
 
 void GLLoadScene(const GLSharedPtr<GLScene>& scene)
 {
 	auto instance = GLMain::GetInstance();
-
-	instance->Scene = scene;
+	instance->SetScene(scene);
 }
 
-GLSharedPtr<GLWindow>& GLCurrentWindow()
+GLSharedPtr<GLWindow> GLGetCurrentWindow()
 {
-	return GLMain::GetInstance()->Window;
+	return GLMain::GetInstance()->GetWindow();
 }
 
 void GLSetWindow(const GLSharedPtr<GLWindow>& window)
 {
-	GLMain::GetInstance()->Window = window;
+	GLMain::GetInstance()->SetWindow(window);
 }
 
 void __GLMainOnDraw();
@@ -136,28 +156,21 @@ void __GLMainIntervalCallbackRunner(int id);
 
 void __GLUpdateScene()
 {
-	static GLfloat oldTime = glutGet(GLUT_ELAPSED_TIME) / 1000.0f;
+	static float oldTime = glutGet(GLUT_ELAPSED_TIME) / 1000.0f;
 
-	GLfloat currentTime = glutGet(GLUT_ELAPSED_TIME) / 1000.0f;
-	GLfloat deltaTime = currentTime - oldTime;
+	float currentTime = glutGet(GLUT_ELAPSED_TIME) / 1000.0f;
+	float deltaTime = currentTime - oldTime;
 
 	oldTime = currentTime;
 
-	auto window = GLCurrentWindow();
-	auto scene = GLCurrentScene();
-
-	auto BackgroundColor = scene->GetBackgroudColor();
-
-	glClearColor(BackgroundColor.r, BackgroundColor.g, BackgroundColor.b, BackgroundColor.a);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	auto window = GLGetCurrentWindow();
+	auto scene = GLGetCurrentScene();
 
 	scene->Update(deltaTime);
 	scene->Render(window->GetSize());
 
-	glutSwapBuffers();
-
-	GLfloat finishedTime = glutGet(GLUT_ELAPSED_TIME) / 1000.0f;
-	GLfloat elapsedTime = finishedTime - currentTime;
+	float finishedTime = glutGet(GLUT_ELAPSED_TIME) / 1000.0f;
+	float elapsedTime = finishedTime - currentTime;
 	std::this_thread::sleep_for(std::chrono::milliseconds((int)glm::max(0.0f, 1000 / 60 - elapsedTime)));
 }
 
@@ -171,7 +184,7 @@ GLMain::GLMain(const GLSharedPtr<GLWindow>& Window)
 {
 	this->RegisterCallbackManager();
 
-	this->Window = Window;
+	this->window = Window;
 }
 
 void GLMain::RegisterCallbackManager()
@@ -202,116 +215,116 @@ void GLMain::OnIdle()
 
 void GLMain::OnReshape(int W, int H)
 {
-	if (this->Window)
+	if (this->window)
 	{
-		this->Window->SetSize(W, H);
+		this->window->SetSize(W, H);
 	}
 }
 
 void GLMain::OnKeyboard(unsigned char Key, int X, int Y)
 {
-	if (this->Scene)
+	if (this->scene)
 	{
-		this->Scene->Root->OnKeyDown(this->KeyMapper[Key], X, Y);
+		this->scene->GetRoot()->OnKeyDown(this->keyMapper[Key], X, Y);
 	}
 }
 
 void GLMain::OnKeyboardUp(unsigned char Key, int X, int Y)
 {
-	if (this->Scene)
+	if (this->scene)
 	{
-		this->Scene->Root->OnKeyUp(this->KeyMapper[Key], X, Y);
+		this->scene->GetRoot()->OnKeyUp(this->keyMapper[Key], X, Y);
 	}
 }
 
 void GLMain::OnSpecial(int Key, int X, int Y)
 {
-	if (this->Scene)
+	if (this->scene)
 	{
-		this->Scene->Root->OnKeyDown(this->KeyMapper[Key + 128], X, Y);
+		this->scene->GetRoot()->OnKeyDown(this->keyMapper[Key + 128], X, Y);
 	}
 }
 
 void GLMain::OnSpecialUp(int Key, int X, int Y)
 {
-	if (this->Scene)
+	if (this->scene)
 	{
-		this->Scene->Root->OnKeyUp(this->KeyMapper[Key + 128], X, Y);
+		this->scene->GetRoot()->OnKeyUp(this->keyMapper[Key + 128], X, Y);
 	}
 }
 
 void GLMain::OnMouse(int Button, int State, int X, int Y)
 {
-	this->MouseX = X;
-	this->MouseY = Y;
+	this->mouseX = X;
+	this->mouseY = Y;
 
-	if (this->Scene)
+	if (this->scene)
 	{
 		if (State == GLUT_DOWN)
 		{
-			this->MouseButton = Button;
-			this->Scene->Root->OnMouseDown(Button, X, Y);
+			this->mouseButton = Button;
+			this->scene->GetRoot()->OnMouseDown(Button, X, Y);
 		}
 		else if (State == GLUT_UP)
 		{
-			this->MouseButton = -1;
-			this->Scene->Root->OnMouseUp(Button, X, Y);
+			this->mouseButton = -1;
+			this->scene->GetRoot()->OnMouseUp(Button, X, Y);
 		}
 	}
 }
 
 void GLMain::OnMouseWheel(int wheel, int direction, int X, int Y)
 {
-	this->MouseX = X;
-	this->MouseY = Y;
+	this->mouseX = X;
+	this->mouseY = Y;
 
-	if (this->Scene)
+	if (this->scene)
 	{
-		this->Scene->Root->OnMouseWheel(wheel, direction, X, Y);
+		this->scene->GetRoot()->OnMouseWheel(wheel, direction, X, Y);
 	}
 }
 
 void GLMain::OnMotion(int X, int Y)
 {
-	this->MouseX = X;
-	this->MouseY = Y;
+	this->mouseX = X;
+	this->mouseY = Y;
 
-	if (this->Scene)
+	if (this->scene)
 	{
-		this->Scene->Root->OnMouseMove(this->MouseButton, X, Y);
+		this->scene->GetRoot()->OnMouseMove(this->mouseButton, X, Y);
 	}
 }
 
 void GLMain::OnPassiveMotion(int X, int Y)
 {
-	this->MouseX = X;
-	this->MouseY = Y;
+	this->mouseX = X;
+	this->mouseY = Y;
 
-	if (this->Scene)
+	if (this->scene)
 	{
-		this->Scene->Root->OnMouseMove(-1, X, Y);
+		this->scene->GetRoot()->OnMouseMove(-1, X, Y);
 	}
 }
 
 void GLMain::OnEntry(int State)
 {
-	if (this->Scene)
+	if (this->scene)
 	{
 		if (State == GLUT_LEFT)
 		{
-			this->Scene->Root->OnMouseLeave();
+			this->scene->GetRoot()->OnMouseLeave();
 		}
 		else if (State == GLUT_ENTERED)
 		{
-			this->Scene->Root->OnMouseEnter();
+			this->scene->GetRoot()->OnMouseEnter();
 		}
 	}
 }
 
 int GLMain::SetTimeout(int Msec, std::function<void()> Func)
 {
-	GLSharedPtr<GLTimeoutCallback> Callback = GLCreate<GLTimeoutCallback>(this->UniqueIdProvider++, Func, Msec);
-	this->Callbacks[Callback->Id] = Callback;
+	GLSharedPtr<GLTimeoutCallback> Callback = GLCreate<GLTimeoutCallback>(this->uniqueIdProvider++, Func, Msec);
+	this->callbacks[Callback->Id] = Callback;
 
 	glutTimerFunc(Callback->TimeoutMsec, __GLMainIntervalCallbackRunner, Callback->Id);
 
@@ -320,19 +333,19 @@ int GLMain::SetTimeout(int Msec, std::function<void()> Func)
 
 int GLMain::SetInterval(int Msec, std::function<void()> Func)
 {
-	GLSharedPtr<GLIntervalCallback> Callback = GLCreate<GLIntervalCallback>(this->UniqueIdProvider++, Func, Msec);
-	this->Callbacks[Callback->Id] = Callback;
+	GLSharedPtr<GLIntervalCallback> Callback = GLCreate<GLIntervalCallback>(this->uniqueIdProvider++, Func, Msec);
+	this->callbacks[Callback->Id] = Callback;
 
 	glutTimerFunc(Callback->IntervalMsec, __GLMainIntervalCallbackRunner, Callback->Id);
 
 	return Callback->Id;
 }
 
-GLboolean GLMain::ClearInterval(int id)
+bool GLMain::ClearInterval(int id)
 {
-	if (this->Callbacks.find(id) != this->Callbacks.end())
+	if (this->callbacks.find(id) != this->callbacks.end())
 	{
-		auto Callback = std::static_pointer_cast<GLIntervalCallback>(this->Callbacks[id]);
+		auto Callback = std::static_pointer_cast<GLIntervalCallback>(this->callbacks[id]);
 	    Callback->bIntervalFinished = true;
 		return true;
 	}
@@ -342,8 +355,8 @@ GLboolean GLMain::ClearInterval(int id)
 
 GLSharedPtr<GLCallback> GLMain::GetCallback(int Id)
 {
-	auto CallbackInfo = this->Callbacks.find(Id);
-	if (CallbackInfo != this->Callbacks.end())
+	auto CallbackInfo = this->callbacks.find(Id);
+	if (CallbackInfo != this->callbacks.end())
 	{
 		return CallbackInfo->second;
 	}
@@ -353,10 +366,10 @@ GLSharedPtr<GLCallback> GLMain::GetCallback(int Id)
 
 void GLMain::DeleteCallback(int Id)
 {
-	auto Callback = this->Callbacks.find(Id);
-	if (Callback != this->Callbacks.end())
+	auto Callback = this->callbacks.find(Id);
+	if (Callback != this->callbacks.end())
 	{
-		this->Callbacks.erase(Callback);
+		this->callbacks.erase(Callback);
 	}
 }
 

@@ -328,7 +328,7 @@ public:
 		return this->normals;
 	}
 
-	glm::vec3 SetNormal(int arrayIndex, const glm::vec3& normal)
+	void SetNormal(int arrayIndex, const glm::vec3& normal)
 	{
 		assert(arrayIndex >= 0 && arrayIndex < this->normals.size());
 
@@ -394,7 +394,7 @@ public:
 		return this->uvs;
 	}
 
-	glm::vec2 SetUV(int arrayIndex, const glm::vec2& uv)
+	void SetUV(int arrayIndex, const glm::vec2& uv)
 	{
 		assert(arrayIndex >= 0 && arrayIndex < this->uvs.size());
 

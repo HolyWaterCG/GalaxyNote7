@@ -27,10 +27,10 @@ public:
 		: name(name),
 		  background(1.0f, 1.0f, 1.0f)
 	{
-		this->Root = GCreate(GLGameObject);
-		this->Root->SetScene(GLSharedPtr<GLScene>(this));
+		this->root = GCreate(GLGameObject);
+		this->root->SetScene(GLSharedPtr<GLScene>(this));
 
-		this->Physics = GLCreate<GLPhysics>();
+		this->physics = GLCreate<GLPhysics>();
 	}
 
 	virtual ~GLScene() { }
@@ -39,18 +39,18 @@ public:
 	{
 		assert(camera != nullptr);
 
-		this->Cameras.push_back(camera);
+		this->cameras.push_back(camera);
 	}
 
 	void RemoveCamera(const GLSharedPtr<GCamera>& camera)
 	{
 		assert(camera != nullptr);
 		
-		auto position = std::find(this->Cameras.begin(), this->Cameras.end(), camera);
+		auto position = std::find(this->cameras.begin(), this->cameras.end(), camera);
 
-		if (position != this->Cameras.end())
+		if (position != this->cameras.end())
 		{
-			this->Cameras.erase(position);
+			this->cameras.erase(position);
 		}
 	}
 
@@ -58,18 +58,18 @@ public:
 	{
 		assert(light != nullptr);
 
-		this->Lights.push_back(light);
+		this->lights.push_back(light);
 	}
 
 	void RemoveLight(const GLSharedPtr<GLLight>& light)
 	{
 		assert(light != nullptr);
 
-		auto position = std::find(this->Lights.begin(), this->Lights.end(), light);
+		auto position = std::find(this->lights.begin(), this->lights.end(), light);
 
-		if (position != this->Lights.end())
+		if (position != this->lights.end())
 		{
-			this->Lights.erase(position);
+			this->lights.erase(position);
 		}
 	}
 
@@ -79,10 +79,8 @@ public:
 
 		while (this->timeStepAccumulator >= this->fixedTimeStep)
 		{
-			this->Root->Update(this->fixedTimeStep);
-
-			this->Physics->Update(this->fixedTimeStep);
-			this->Physics->Sync();
+			this->root->Update(this->fixedTimeStep);
+			this->physics->Update(this->fixedTimeStep);
 
 			this->timeStepAccumulator -= this->fixedTimeStep;
 		}
@@ -90,14 +88,19 @@ public:
 
 	void Render(const glm::vec2& windowSize)
 	{
-		std::sort(this->Cameras.begin(), this->Cameras.end(),
+		std::sort(this->cameras.begin(), this->cameras.end(),
 			[](const GLSharedPtr<GCamera>& a, const GLSharedPtr<GCamera>& b)
 			{
 				return a->GetOrder() < b->GetOrder();
 			}
 		);
 
-		for (const auto& camera : this->Cameras)
+		auto backgroundColor = this->GetBackgroudColor();
+
+		glClearColor(backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		for (const auto& camera : this->cameras)
 		{
 			if (camera->IsActive())
 			{
@@ -117,10 +120,12 @@ public:
 
 				glm::vec3 cameraPosition = camera->GetTransform()->GetPosition();
 
-				this->Root->Render(camera->GetLayer(), camera->GetCachedViewMatrix(), camera->GetCachedProjectionMatrix(), cameraPosition, this->Lights);
-				this->Physics->Render(camera->GetCachedViewMatrix(), camera->GetCachedProjectionMatrix(), cameraPosition);
+				this->root->Render(camera->GetLayer(), camera->GetCachedViewMatrix(), camera->GetCachedProjectionMatrix(), cameraPosition, this->lights);
+				this->physics->Render(camera->GetCachedViewMatrix(), camera->GetCachedProjectionMatrix(), cameraPosition);
 			}
 		}
+
+		glutSwapBuffers();
 	}
 
 	void SetBackgroundColor(const GLColor& color)
@@ -133,12 +138,32 @@ public:
 		return this->background;
 	}
 
-	GLSharedPtr<GLPhysics> Physics;
-	GLSharedPtr<GLGameObject> Root;
-	std::vector<GLSharedPtr<GCamera>> Cameras;
-	std::vector<GLSharedPtr<GLLight>> Lights;
+	GLSharedPtr<GLPhysics> GetPhysics()
+	{
+		return this->physics;
+	}
+
+	GLSharedPtr<GLGameObject> GetRoot()
+	{
+		return this->root;
+	}
+
+	std::vector<GLSharedPtr<GCamera>>& GetCameras()
+	{
+		return this->cameras;
+	}
+
+	std::vector<GLSharedPtr<GLLight>>& GetLights()
+	{
+		return this->lights;
+	}
 
 protected:
+	GLSharedPtr<GLPhysics> physics;
+	GLSharedPtr<GLGameObject> root;
+	std::vector<GLSharedPtr<GCamera>> cameras;
+	std::vector<GLSharedPtr<GLLight>> lights;
+
 	std::string name;
 	GLColor background;
 

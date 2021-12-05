@@ -5,8 +5,8 @@
 class GLBasicShader : public GLShader
 {
 private:
-	static GLVertexShaderLoader vertexShader;
-	static GLFragmentShaderLoader fragmentShader;
+	static GLShaderLoader vertexShaderSource;
+	static GLShaderLoader fragmentShaderSource;
 	static bool initialized;
 public:
     GLBasicShader()
@@ -15,12 +15,18 @@ public:
 		{
 			initialized = true;
 
-			vertexShader = GLVertexShaderLoader("shaders\\BasicVertexShader.glsl");
-			fragmentShader = GLFragmentShaderLoader("shaders\\BasicFragmentShader.glsl");
-
-			vertexShader.Load();
-			fragmentShader.Load();
+			vertexShaderSource = GLShaderLoader("shaders\\BasicVertexShader.glsl");
+			fragmentShaderSource = GLShaderLoader("shaders\\BasicFragmentShader.glsl");
 		}
+
+		GLVertexShaderLoader vertexShader;
+		GLFragmentShaderLoader fragmentShader;
+
+		vertexShader.SetSource(vertexShaderSource.GetSource());
+		fragmentShader.SetSource(fragmentShaderSource.GetSource());
+
+		vertexShader.Load();
+		fragmentShader.Load();
 
 		this->CreateProgram(vertexShader, fragmentShader);
 	}
@@ -31,15 +37,15 @@ public:
 	}
 };
 
-GLVertexShaderLoader GLBasicShader::vertexShader;
-GLFragmentShaderLoader GLBasicShader::fragmentShader;
+GLShaderLoader GLBasicShader::vertexShaderSource;
+GLShaderLoader GLBasicShader::fragmentShaderSource;
 bool GLBasicShader::initialized = false;
 
 class GLBasicMaterialShader : public GLShader
 {
 private:
-	static GLVertexShaderLoader vertexShader;
-	static GLFragmentShaderLoader fragmentShader;
+	static GLShaderLoader vertexShaderSource;
+	static GLShaderLoader fragmentShaderSource;
 	static bool initialized;
 public:
 	GLBasicMaterialShader()
@@ -48,12 +54,18 @@ public:
 		{
 			initialized = true;
 
-			vertexShader = GLVertexShaderLoader("shaders\\BasicMaterialVertexShader.glsl");
-			fragmentShader = GLFragmentShaderLoader("shaders\\BasicMaterialFragmentShader.glsl");
-
-			vertexShader.Load();
-			fragmentShader.Load();
+			vertexShaderSource = GLShaderLoader("shaders\\BasicMaterialVertexShader.glsl");
+			fragmentShaderSource = GLShaderLoader("shaders\\BasicMaterialFragmentShader.glsl");
 		}
+
+		GLVertexShaderLoader vertexShader;
+		GLFragmentShaderLoader fragmentShader;
+
+		vertexShader.SetSource(vertexShaderSource.GetSource());
+		fragmentShader.SetSource(fragmentShaderSource.GetSource());
+
+		vertexShader.Load();
+		fragmentShader.Load();
 
 		this->CreateProgram(vertexShader, fragmentShader);
 	}
@@ -64,15 +76,15 @@ public:
 	}
 };
 
-GLVertexShaderLoader GLBasicMaterialShader::vertexShader;
-GLFragmentShaderLoader GLBasicMaterialShader::fragmentShader;
+GLShaderLoader GLBasicMaterialShader::vertexShaderSource;
+GLShaderLoader GLBasicMaterialShader::fragmentShaderSource;
 bool GLBasicMaterialShader::initialized = false;
 
 class GLBasicTextureShader : public GLShader
 {
 private:
-	static GLVertexShaderLoader vertexShader;
-	static GLFragmentShaderLoader fragmentShader;
+	static GLShaderLoader vertexShaderSource;
+	static GLShaderLoader fragmentShaderSource;
 	static bool initialized;
 public:
 	GLBasicTextureShader()
@@ -81,12 +93,18 @@ public:
 		{
 			initialized = true;
 
-			vertexShader = GLVertexShaderLoader("shaders\\BasicTextureVertexShader.glsl");
-			fragmentShader = GLFragmentShaderLoader("shaders\\BasicTextureFragmentShader.glsl");
-
-			vertexShader.Load();
-			fragmentShader.Load();
+			vertexShaderSource = GLShaderLoader("shaders\\BasicTextureVertexShader.glsl");
+			fragmentShaderSource = GLShaderLoader("shaders\\BasicTextureFragmentShader.glsl");
 		}
+
+		GLVertexShaderLoader vertexShader;
+		GLFragmentShaderLoader fragmentShader;
+
+		vertexShader.SetSource(vertexShaderSource.GetSource());
+		fragmentShader.SetSource(fragmentShaderSource.GetSource());
+
+		vertexShader.Load();
+		fragmentShader.Load();
 
 		this->CreateProgram(vertexShader, fragmentShader);
 	}
@@ -97,15 +115,15 @@ public:
 	}
 };
 
-GLVertexShaderLoader GLBasicTextureShader::vertexShader;
-GLFragmentShaderLoader GLBasicTextureShader::fragmentShader;
+GLShaderLoader GLBasicTextureShader::vertexShaderSource;
+GLShaderLoader GLBasicTextureShader::fragmentShaderSource;
 bool GLBasicTextureShader::initialized = false;
 
 class GLBasicTextureMaterialShader : public GLShader
 {
 private:
-	static GLVertexShaderLoader vertexShader;
-	static GLFragmentShaderLoader fragmentShader;
+	static GLShaderLoader vertexShaderSource;
+	static GLShaderLoader fragmentShaderSource;
 	static bool initialized;
 public:
 	GLBasicTextureMaterialShader()
@@ -114,12 +132,18 @@ public:
 		{
 			initialized = true;
 
-			vertexShader = GLVertexShaderLoader("shaders\\BasicTextureMaterialVertexShader.glsl");
-			fragmentShader = GLFragmentShaderLoader("shaders\\BasicTextureMaterialFragmentShader.glsl");
-
-			vertexShader.Load();
-			fragmentShader.Load();
+			vertexShaderSource = GLShaderLoader("shaders\\BasicTextureMaterialVertexShader.glsl");
+			fragmentShaderSource = GLShaderLoader("shaders\\BasicTextureMaterialFragmentShader.glsl");
 		}
+
+		GLVertexShaderLoader vertexShader;
+		GLFragmentShaderLoader fragmentShader;
+
+		vertexShader.SetSource(vertexShaderSource.GetSource());
+		fragmentShader.SetSource(fragmentShaderSource.GetSource());
+
+		vertexShader.Load();
+		fragmentShader.Load();
 
 		this->CreateProgram(vertexShader, fragmentShader);
 	}
@@ -130,6 +154,6 @@ public:
 	}
 };
 
-GLVertexShaderLoader GLBasicTextureMaterialShader::vertexShader;
-GLFragmentShaderLoader GLBasicTextureMaterialShader::fragmentShader;
+GLShaderLoader GLBasicTextureMaterialShader::vertexShaderSource;
+GLShaderLoader GLBasicTextureMaterialShader::fragmentShaderSource;
 bool GLBasicTextureMaterialShader::initialized = false;

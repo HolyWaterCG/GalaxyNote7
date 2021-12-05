@@ -9,8 +9,23 @@
 #include "GLTransform.h"
 #include "GLMeshRenderer.h"
 
+using GLPhysicsTransform = reactphysics3d::Transform;
+
+using GLCollisionShape = reactphysics3d::CollisionShape;
+using GLBoxShape = reactphysics3d::BoxShape;
+using GLCapsuleShape = reactphysics3d::CapsuleShape;
+
+using GLCollider = reactphysics3d::Collider;
+using GLPhysicsMaterial = reactphysics3d::Material;
+
+using GLBodyType = reactphysics3d::BodyType;
+
 class GLPhysics
 {
+public:
+	static const GLBodyType DYNAMIC = GLBodyType::DYNAMIC;
+	static const GLBodyType KIMEMATIC = GLBodyType::KINEMATIC;
+	static const GLBodyType STATIC = GLBodyType::STATIC;
 public:
 	GLPhysics()
 	{
@@ -22,6 +37,7 @@ public:
 
 		this->DebugMeshRenderer = GLCreate<GLMeshRenderer>();
 		this->DebugMeshRenderer->GetMesh()->SetDrawMode(GLMeshDrawMode::Line);
+		this->DebugMeshRenderer->GetMaterial()->SetShader(GLCreate<GLBasicShader>());
 
 		auto& debugRenderer = this->World->getDebugRenderer();
 		debugRenderer.setIsDebugItemDisplayed(reactphysics3d::DebugRenderer::DebugItem::CONTACT_POINT, true);
@@ -158,27 +174,42 @@ public:
 
 	void DestroyCollisionBody(reactphysics3d::CollisionBody* collisionBody)
 	{
-		this->World->destroyCollisionBody(collisionBody);
+		if (collisionBody != nullptr)
+		{
+			this->World->destroyCollisionBody(collisionBody);
+		}
 	}
 
 	void DestroyRigidBody(reactphysics3d::RigidBody* rigidBody)
 	{
-		this->World->destroyRigidBody(rigidBody);
+		if (rigidBody != nullptr)
+		{
+			this->World->destroyRigidBody(rigidBody);
+		}
 	}
 
 	void DestroyBoxShape(reactphysics3d::BoxShape* boxShape)
 	{
-		this->PhysicsCommon.destroyBoxShape(boxShape);
+		if (boxShape != nullptr)
+		{
+			this->PhysicsCommon.destroyBoxShape(boxShape);
+		}
 	}
 
 	void DestroySphereShape(reactphysics3d::SphereShape* sphereShape)
 	{
-		this->PhysicsCommon.destroySphereShape(sphereShape);
+		if (sphereShape != nullptr)
+		{
+			this->PhysicsCommon.destroySphereShape(sphereShape);
+		}
 	}
 
 	void DestroyCapsuleShape(reactphysics3d::CapsuleShape* capsuleShape)
 	{
-		this->PhysicsCommon.destroyCapsuleShape(capsuleShape);
+		if (capsuleShape != nullptr)
+		{
+			this->PhysicsCommon.destroyCapsuleShape(capsuleShape);
+		}
 	}
 
 	void UpdateCollisionBody(

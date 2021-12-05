@@ -165,6 +165,7 @@ public:
 
 	virtual ~GLShader()
 	{
+		glDeleteProgram(this->id);
 	}
 
 	void Load(const std::string& vertexFilename, const std::string& fragmentFilename)
@@ -177,7 +178,7 @@ public:
 
 	unsigned int GetId()
 	{
-		return this->Id;
+		return this->id;
 	}
 
 	int GetUniformLocation(const std::string& name)
@@ -386,20 +387,18 @@ protected:
 		int success;
 		char infoLog[1024];
 
-		this->Id = glCreateProgram();
-		glAttachShader(this->Id, vertexShaderLoader.GetId());
-		glAttachShader(this->Id, fragmentShaderLoader.GetId());
-		glLinkProgram(this->Id);
+		this->id = glCreateProgram();
+		glAttachShader(this->id, vertexShaderLoader.GetId());
+		glAttachShader(this->id, fragmentShaderLoader.GetId());
+		glLinkProgram(this->id);
 
-		glGetProgramiv(this->Id, GL_LINK_STATUS, &success);
+		glGetProgramiv(this->id, GL_LINK_STATUS, &success);
 
 		if (!success)
 		{
-			glGetProgramInfoLog(this->Id, 1024, NULL, infoLog);
+			glGetProgramInfoLog(this->id, 1024, NULL, infoLog);
 			std::cout << "GLShader: Program Linking Error" << std::endl;
 			std::cout << infoLog << std::endl;
-
-			std::cout << vertexShaderLoader.GetId() << " " << fragmentShaderLoader.GetId() << std::endl;
 		}
 
 		glDeleteShader(vertexShaderLoader.GetId());
@@ -407,7 +406,7 @@ protected:
 	}
 
 private:
-	unsigned int Id = -1;
+	unsigned int id = -1;
 
 	std::unordered_map<std::string, int> uniformLocations;
 };
