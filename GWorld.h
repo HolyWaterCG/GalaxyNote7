@@ -2,10 +2,13 @@
 
 #include "GLEngine/GL/GL.h"
 
+#include "GBoundary.h"
+#include "GPlayer.h"
 #include "Helpers.h"
 #include "GCameraController.h"
 #include "GPointLightController.h"
-#include "GFloor.h"
+#include "GBullet.h"
+#include "GBox.h"
 #include "GSolarSystem.h"
 #include "GFractalPhyramid.h"
 #include "GSnowFallEffect.h"
@@ -22,26 +25,25 @@ public:
 	void Initialize() override
 	{
 		auto cameraController = GCreate(GCameraController);
-		auto lightContoller = GCreate(GPointLightController, glm::vec3(0.7f), glm::vec3(0.7f), glm::vec3(0.8f), 1.0f, 0.22f, 0.20f);
+		auto lightContoller = GCreate(GPointLightController, glm::vec3(1.3f), glm::vec3(1.3f), glm::vec3(1.3f), 1.0f, 0.22f, 0.20f);
+		this->bulletCnt = GCreate(GBulletCnt);
+		auto Object = GCreate(GBoxItem);
+		this->hero = GCreate(GPlayer);
+		auto Line = GCreate(GBoundary);
 
-		auto floor = GCreate(GFloor);
-		auto solarSystem = GCreate(GSolarSystem);
-		auto fractalPhyramid = GCreate(GFractalPhyramid);
-
-		auto snowFallEffect = GCreate(GSnowFallEffect);
-
-		this->AddChildren({ cameraController, lightContoller, floor, solarSystem, fractalPhyramid, snowFallEffect });
+		this->AddChildren({ cameraController, lightContoller, bulletCnt, Object, hero, Line});
 
 		cameraController->Initialize();
 		lightContoller->Initialize();
-		floor->Initialize();
-		solarSystem->Initialize();
-		fractalPhyramid->Initialize();
-		snowFallEffect->Initialize();
+		bulletCnt->Initialize();
+		Object->Initialize();
+		hero->Initialize();
+		Line->Initialize();
 
-		lightContoller->GetTransform()->SetPosition(0.0f, 1.0f, 2.0f);
-		solarSystem->GetTransform()->SetPosition(0.0f, 1.0f, 0.0f);
-		fractalPhyramid->GetTransform()->SetPosition(0.0f, 1.0f, 0.0f);
+		cameraController->GetTransform()->SetPosition(0.f, 5.f, 0.f);
+		lightContoller->GetTransform()->SetPosition(0.0f, 5.0f, 0.0f);
+		hero->GetTransform()->SetPosition(0.0f, 0.0f, 0.0f);
+
 	}
 
 	void OnKeyDown(const std::string& key, int x, int y) override
@@ -53,4 +55,12 @@ public:
 			GLMain::GetInstance()->Exit();
 		}
 	}
+
+	void Update(float deltaTime) override
+	{
+		GLGameObject::Update(deltaTime);
+	}
+
+	GLSharedPtr<GBulletCnt> bulletCnt;
+	GLSharedPtr<GPlayer> hero;
 };
