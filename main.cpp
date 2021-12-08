@@ -21,14 +21,14 @@ int main(int argc, char* argv[])
 	glEnable(GL_DEPTH_TEST);
 
 	auto scene = GLCreate<GLScene>("Training27");
+	GLLoadScene(scene);
+
 	auto world = GCreate(GWorld);
-	scene->Root->AddChild(world);
+	scene->GetRoot()->AddChild(world);
 
 	scene->SetBackgroundColor(GLColor(0.0f, 0.0f, 0.0f));
 
 	world->Initialize();
-
-	GLLoadScene(scene);
 
 	glutMainLoop();
 }
