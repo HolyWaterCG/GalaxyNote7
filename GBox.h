@@ -62,7 +62,7 @@ public:
 	{
 		GLGameObject::Initialize();
 
-		for (int i = 0; i < 4; i++) {
+		for (int i = 0; i < itemBoxCnt; i++) {
 
 			auto Cube = GCreate(GBox);
 
@@ -71,14 +71,24 @@ public:
 			Cube->Initialize();
 
 			auto transform = Cube->GetTransform();
-			transform->SetPosition(Rand3v(-2.5f, 2.5f, 0.f, 0.f, -2.5f, 2.5f));
+			transform->SetPosition(Rand3v(-4.5f, 4.5f, 0.f, 0.f, -4.5f, 4.5f));
 			
 		}
 	}
 
 	void SetItemBox(int ItemBox)
 	{
-		this->ItemBoxCnt = ItemBox;
+		this->itemBoxCnt = ItemBox;
+	}
+
+	void OnKeyDown(const std::string& key, int x, int y) override
+	{
+		GLGameObject::OnKeyDown(key, x, y);
+
+		if (key == "1")
+		{
+			this->itemBoxCnt = 8;
+		}
 	}
 
 	void Update(GLfloat deltaTime) override
@@ -86,7 +96,15 @@ public:
 		GLGameObject::Update(deltaTime);
 	}
 
+	
+
+	void Reset() 
+	{
+		this->itemBoxCnt = 0;
+	}
+
 private:
-	int ItemBoxCnt = 4;
+	int itemBoxCnt = 3; // 1라운드
+	//int itemBoxCnt = 8; // 2라운드
 
 };

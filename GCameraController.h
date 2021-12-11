@@ -11,32 +11,32 @@ public:
 
 	}
 
-	void Initialize() override
+	void Initialize() override //부모에 있는 클래스가 virtual 이여야함 그냥 오버라이드 무조건 쓰셈
 	{
-		this->perspectiveCamera = GCreate(GPerspectiveCamera, 90.0f);
-		this->orthographicCamera = GCreate(GOrthographicCamera, -2.0f, 2.0f, -2.0f, 2.0f);
+		this->perspectiveCamera = GCreate(GPerspectiveCamera, 90.0f); //원근
+		this->orthographicCamera = GCreate(GOrthographicCamera, -2.0f, 2.0f, -2.0f, 2.0f); //직각
 
-		auto scene = this->GetScene();
-		scene->AddCamera(this->perspectiveCamera);
-		scene->AddCamera(this->orthographicCamera);
+		auto scene = this->GetScene(); //root object가 포함되어있는 scene
+		scene->AddCamera(this->perspectiveCamera); 
+		scene->AddCamera(this->orthographicCamera); 
 
 		this->AddChildren({ this->perspectiveCamera, this->orthographicCamera });
 
 		this->Reset();
 	}
 
-	void Update(float deltaTime) override
+	void Update(float deltaTime) override //카메라 srt
 	{
 		GLGameObject::Update(deltaTime);
 
 		auto transform = this->GetTransform();
 
-		transform->RotateAround(
+		transform->RotateAround( //공전 각도만큼
 			glm::vec3(0.0f, 0.0f, 0.0f), deltaTime * this->rotatingAroundCenter, glm::vec3(0.0f, 1.0f, 0.0f));
 
-		transform->Rotate(deltaTime * this->rotating, glm::vec3(0.0f, 1.0f, 0.0f));
+		transform->Rotate(deltaTime * this->rotating, glm::vec3(0.0f, 1.0f, 0.0f)); // 자전
 
-		transform->Translate(glm::vec3(this->directions) * deltaTime);
+		transform->Translate(glm::vec3(this->directions) * deltaTime); 
 	}
 
 	void OnKeyDown(const std::string& key, int x, int y) override
@@ -72,6 +72,8 @@ public:
 		else if (key == "r")
 		{
 			ToggleDirection(this->rotatingAroundCenter, 1);
+			std::cout << this->GetTransform()->GetPosition().x << std::endl;
+
 		}
 		else if (key == "R")
 		{
@@ -79,7 +81,7 @@ public:
 		}
 		else if (key == "a")
 		{
-			this->rotatingAroundCenter = 1;
+			this->rotatingAroundCenter = 1; 
 		}
 		else if (key == "A")
 		{
@@ -114,9 +116,8 @@ public:
 		this->perspectiveCamera->SetActive(true);
 		this->orthographicCamera->SetActive(false);
 
-		this->GetTransform()->SetPosition(0.0f, 2.0f, 2.5f);
-		this->perspectiveCamera->GetTransform()->SetEulerAngles(glm::radians(-30.0f), 0.0f, 0.0f);
-		this->orthographicCamera->GetTransform()->SetEulerAngles(glm::radians(-30.0f), 0.0f, 0.0f);
+		this->perspectiveCamera->GetTransform()->SetEulerAngles(glm::radians(-90.0f), 0.0f, 0.0f);
+		this->orthographicCamera->GetTransform()->SetEulerAngles(glm::radians(-90.0f), 0.0f, 0.0f);
 	}
 
 private:
@@ -125,6 +126,6 @@ private:
 
 	glm::tvec3<int> directions = glm::tvec3<int>(0);
 
-	GLSharedPtr<GPerspectiveCamera> perspectiveCamera;
+	GLSharedPtr<GPerspectiveCamera> perspectiveCamera; //동적할당인데 나중에 해제할필요없는 smart
 	GLSharedPtr<GOrthographicCamera> orthographicCamera;
 };
