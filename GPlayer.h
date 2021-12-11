@@ -102,7 +102,6 @@ public:
 				{
 					this->moveSpeed.x = 0.0f;
 				}
-				//transform->Rotate(-45.f, back);
 			}
 		}
 		else if (key == "6")
@@ -121,7 +120,6 @@ public:
 				{
 					this->moveSpeed.x = 0.0f;
 				}
-				//transform->Rotate(45.f, back);
 			}
 		}
 
@@ -168,25 +166,6 @@ public:
 
 		transform->SetPosition(0.f,0.f,0.f);
 	}
-
-	//void Dead()
-	//{
-
-	//	Initialize();
-
-	//	auto shape = GCreate(GUVSphere);
-	//	this->AddChild(shape);
-
-	//	shape->Initialize();
-
-	//	auto transform = this->GetTransform();
-	//	transform->SetPosition(transform->GetPosition());
-
-	//	transform->SetScale(1.f, 1.f, 1.f);
-
-	//	RandMaterial(shape);
-	//}
-
 
 private:
 	glm::vec3 moveSpeed = glm::vec3(0.0f);

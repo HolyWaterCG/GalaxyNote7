@@ -11,7 +11,7 @@
 #include "GBox.h"
 #include "GPhysicsObject.h"
 
-class GDotgeWorld : public GLGameObject
+class GWorld : public GLGameObject
 {
 
 private:
@@ -23,11 +23,9 @@ private:
 	std::shared_ptr<GBoxItem> itemBox;
 	std::shared_ptr<GBoundary> Line;
 	std::shared_ptr<GBullet> ballSpeed;
-	bool Round1 = true;
-	bool Round2 = false;
 
 public:
-	GConstructor(GDotgeWorld)
+	GConstructor(GWorld)
 		: GSuperClassInitializer(GLGameObject)
 	{
 
@@ -51,7 +49,6 @@ public:
 		hero->Initialize();
 		Line->Initialize();
 
-
 		cameraController->GetTransform()->SetPosition(0.f, 5.f, 0.f);
 		lightContoller->GetTransform()->SetPosition(0.0f, 10.0f, 0.0f);
 		hero->GetTransform()->SetPosition(0.0f, 0.0f, 0.0f);
@@ -66,12 +63,13 @@ public:
 			GLMain::GetInstance()->Exit();
 		}
 
-		if (key == "2") // 2라운드 추가 
+		if (key == "2") // 2라운드때 추가되는요소 
 		{
 
 			bullet->ChageStage();
 			itemBox->SetItemBox(3);
 			itemBox->Initialize();
+
 		}
 	}
 
@@ -79,17 +77,8 @@ public:
 
 	void Update(float deltaTime) override
 	{
+
 		GLGameObject::Update(deltaTime);
-
-		if (Round1)
-		{
-
-		}
-
-		if (Round2)
-		{
-
-		}
 
 	}
 };

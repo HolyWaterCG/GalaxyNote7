@@ -78,33 +78,26 @@ public:
 
 	void SetItemBox(int ItemBox)
 	{
+
 		this->itemBoxCnt = ItemBox;
+
 	}
 
 	void OnKeyDown(const std::string& key, int x, int y) override
 	{
+
 		GLGameObject::OnKeyDown(key, x, y);
 
-		if (key == "1")
-		{
-			this->itemBoxCnt = 8;
-		}
 	}
 
 	void Update(GLfloat deltaTime) override
 	{
+
 		GLGameObject::Update(deltaTime);
-	}
 
-	
-
-	void Reset() 
-	{
-		this->itemBoxCnt = 0;
 	}
 
 private:
-	int itemBoxCnt = 3; // 1라운드
-	//int itemBoxCnt = 8; // 2라운드
+	int itemBoxCnt = 3; 
 
 };

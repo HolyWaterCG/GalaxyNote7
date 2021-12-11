@@ -31,8 +31,6 @@ public:
 
 		meshRenderer->SetMesh(mesh);
 		material->SetDiffuseMap(texture);
-		//material->SetShininess(120.f);
-		//meshRenderer->SetBlend(true);
 	}
 
 	void Update(float deltaTime) override

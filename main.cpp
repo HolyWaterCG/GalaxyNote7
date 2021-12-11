@@ -23,7 +23,7 @@ int main(int argc, char* argv[])
 	auto scene = GLCreate<GLScene>("Training27");
 	GLLoadScene(scene);
 
-	auto dotge = GCreate(GDotgeWorld);
+	auto dotge = GCreate(GWorld);
 	scene->GetRoot()->AddChild(dotge);
 
 	scene->SetBackgroundColor(GLColor(0.0f, 0.0f, 0.0f));

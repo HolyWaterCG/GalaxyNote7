@@ -60,10 +60,6 @@ public:
 		}
 
 		//this->UpdateBody();
-
-		//if (//플레이어와의 충돌이 일어났다.) {
-		//	iscollison = true;
-		//}
 	}
 
 	bool IsMoving()
@@ -86,21 +82,16 @@ public:
 
 	void SetSpeed(glm::vec3 speed)
 	{
-		this->speed += speed;
-	}
 
-	void Reset()
-	{
-		this->speed = glm::vec3(0.f, 0.f, 0.f);
+		this->speed += speed;
+
 	}
 
 private:
-	//glm::vec3 speed = glm::vec3(Rand3v(-0.1f, 1.2f, 0.f, 0.f, -0.1f, 1.2f)); //1라운드
-	glm::vec3 speed = glm::vec3(Rand3v(-0.1f, 1.35f, 0.f, 0.f, -0.1f, 1.35f)); //2라운드
+	glm::vec3 speed = glm::vec3(Rand3v(-0.1f, 1.2f, 0.f, 0.f, -0.1f, 1.2f)); //1라운드
 	bool bIsMoving = true;
 	float dir = -1.f;
 
-	//GLBoxShape* collisionShape;
 };
 
 class GBulletCnt : public GLGameObject
@@ -147,25 +138,19 @@ public:
 
 	void ChageStage()
 	{
+
 		BulletCnt(20);
 		SetSpeed(glm::vec3(0.3f, 0.f, 0.3f));
+
 	}
 
-	void Update(GLfloat deltaTime) override
-	{
-		GLGameObject::Update(deltaTime);
-	}
+
 
 	void BulletCnt(int BulletCnt)
 	{
 		BulletInit(BulletCnt);
 		this->BulletCount = BulletCnt;
 		this->MaxBulletCount += BulletCnt;
-	}
-
-	void Reset()
-	{
-		this->BulletCount = 0;
 	}
 
 	void SetSpeed(glm::vec3 speed)
@@ -176,8 +161,14 @@ public:
 		}
 	}
 
+	void Update(GLfloat deltaTime) override
+	{
+
+		GLGameObject::Update(deltaTime);
+
+	}
 private:
-	int BulletCount = 100; //1라운드
+	int BulletCount = 100;
 	int MaxBulletCount = BulletCount;
 	std::shared_ptr<GBullet> bullet[120];
 };
