@@ -82,4 +82,30 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="GL\shaders\BasicTextureFragmentShader.glsl">
+      <Filter>소스 파일</Filter>
+    </None>
+    <None Include="GL\shaders\BasicTextureMaterialFragmentShader.glsl">
+      <Filter>소스 파일</Filter>
+    </None>
+    <None Include="GL\shaders\BasicTextureMaterialVertexShader.glsl">
+      <Filter>소스 파일</Filter>
+    </None>
+    <None Include="GL\shaders\BasicTextureVertexShader.glsl">
+      <Filter>소스 파일</Filter>
+    </None>
+    <None Include="GL\shaders\BasicVertexShader.glsl">
+      <Filter>소스 파일</Filter>
+    </None>
+    <None Include="GL\shaders\BasicFragmentShader.glsl">
+      <Filter>소스 파일</Filter>
+    </None>
+    <None Include="GL\shaders\BasicMaterialFragmentShader.glsl">
+      <Filter>소스 파일</Filter>
+    </None>
+    <None Include="GL\shaders\BasicMaterialVertexShader.glsl">
+      <Filter>소스 파일</Filter>
+    </None>
+  </ItemGroup>
 </Project>

@@ -31,7 +31,6 @@ public:
 		GLGameObject::Initialize();
 
 		this->GetScene()->AddLight(this->light);
-		this->GetTransform()->SetScale(0.1f, 0.1f, 0.1f);
 	}
 
 	void OnKeyDown(const std::string& key, int x, int y) override
@@ -63,7 +62,4 @@ public:
 
 private:
 	GLSharedPtr<GLPointLight> light;
-
-	glm::vec3 moveSpeed = glm::vec3(0.0f);
-	int rotationDirection = 0;
 };

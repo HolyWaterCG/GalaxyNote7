@@ -46,7 +46,7 @@ public:
 
 	virtual void OnKeyDown(const std::string& key, int x, int y)
 	{
-		for (auto& child : this->Children)
+		for (auto& child : this->children)
 		{
 			child->OnKeyDown(key, x, y);
 		}
@@ -54,7 +54,7 @@ public:
 
 	virtual void OnKeyUp(const std::string& key, int x, int y)
 	{
-		for (auto& child : this->Children)
+		for (auto& child : this->children)
 		{
 			child->OnKeyUp(key, x, y);
 		}
@@ -62,7 +62,7 @@ public:
 
 	virtual void OnMouseDown(int button,int x, int y)
 	{
-		for (auto& child : this->Children)
+		for (auto& child : this->children)
 		{
 			child->OnMouseDown(button, x, y);
 		}
@@ -70,7 +70,7 @@ public:
 
 	virtual void OnMouseUp(int button, int x, int y)
 	{
-		for (auto& child : this->Children)
+		for (auto& child : this->children)
 		{
 			child->OnMouseUp(button, x, y);
 		}
@@ -78,7 +78,7 @@ public:
 
 	virtual void OnMouseWheel(int wheel, int direction, int x, int y)
 	{
-		for (auto& child : this->Children)
+		for (auto& child : this->children)
 		{
 			child->OnMouseWheel(wheel, direction, x, y);
 		}
@@ -86,7 +86,7 @@ public:
 
 	virtual void OnMouseMove(int button, int x, int y)
 	{
-		for (auto& child : this->Children)
+		for (auto& child : this->children)
 		{
 			child->OnMouseMove(button, x, y);
 		}
@@ -94,7 +94,7 @@ public:
 
 	virtual void OnMouseLeave()
 	{
-		for (auto& child : this->Children)
+		for (auto& child : this->children)
 		{
 			child->OnMouseLeave();
 		}
@@ -102,7 +102,7 @@ public:
 
 	virtual void OnMouseEnter()
 	{
-		for (auto& child : this->Children)
+		for (auto& child : this->children)
 		{
 			child->OnMouseEnter();
 		}
@@ -110,7 +110,9 @@ public:
 
 	virtual void Update(GLfloat deltaTime)
 	{
-		for (auto& child : this->Children)
+		this->transform->Update();
+
+		for (auto& child : this->children)
 		{
 			child->Update(deltaTime);
 		}
@@ -126,22 +128,17 @@ public:
 
 		this->transform->Update();
 
-		if (layer != this->layer)
-		{
-			return;
-		}
-
 		if (!this->bVisible)
 		{
 			return;
 		}
 
-		for (auto& child : this->Children)
+		for (auto& child : this->children)
 		{
 			child->Render(layer, viewMatrix, projectionMatrix, cameraPosition, lights);
 		}
 
-		if (this->meshRenderer != nullptr)
+		if (layer == this->layer && this->meshRenderer != nullptr)
 		{
 			this->meshRenderer->Render(this->transform->LocalToWorldMatrix, viewMatrix, projectionMatrix, cameraPosition, lights);
 		}
@@ -165,13 +162,32 @@ public:
 		}
 	}
 
+	GLSharedPtr<GLGameObject> GetChild(int i)
+	{
+		assert(i >= 0 && i < this->children.size());
+
+		return this->children.at(i);
+	}
+
+	GLSharedPtr<GLGameObject> GetChild(const std::string& name)
+	{
+		for (auto& child : this->children)
+		{
+			if (name == child->GetName())
+			{
+				return child;
+			}
+		}
+		return nullptr;
+	}
+
 	void AddChild(const GLSharedPtr<GLGameObject>& child)
 	{
 		assert(child != nullptr);
 
 		child->SetParent(this->transform);
 
-		this->Children.push_back(child);
+		this->children.push_back(child);
 	}
 
 	void AddChildren(const std::initializer_list<GLSharedPtr<GLGameObject>>& children)
@@ -188,12 +204,11 @@ public:
 
 		child->SetParent(nullptr);
 
-		auto position = std::find(this->Children.begin(), this->Children.end(), child);
+		auto position = std::find(this->children.begin(), this->children.end(), child);
 		
-		if (position != this->Children.end())
+		if (position != this->children.end())
 		{
-
-			this->Children.erase(position);
+			this->children.erase(position);
 		}
 	}
 
@@ -207,7 +222,17 @@ public:
 
 	void ClearChildren()
 	{
-		this->Children.clear();
+		this->children.clear();
+	}
+
+	std::string GetName()
+	{
+		return this->name;
+	}
+
+	void SetName(const std::string& name)
+	{
+		this->name = name;
 	}
 	
 	std::string GetLayer()
@@ -220,14 +245,14 @@ public:
 		this->layer = layer;
 	}
 
-	void SetVisible(bool bVisible)
-	{
-		this->bVisible = bVisible;
-	}
-
 	bool IsVisible()
 	{
 		return this->bVisible;
+	}
+
+	void SetVisible(bool bVisible)
+	{
+		this->bVisible = bVisible;
 	}
 
 	GLSharedPtr<GLScene> GetScene()
@@ -260,16 +285,17 @@ public:
 		this->transform = transform;
 	}
 
-	std::vector<GLSharedPtr<GLGameObject>> Children;
-
 private:
 	GLSharedPtr<GLScene> scene = nullptr;
 	GLSharedPtr<GLTransform> transform = nullptr;
 	GLSharedPtr<GLMeshRenderer> meshRenderer = nullptr;
 
 	std::vector<GLSharedPtr<GLComponent>> components;
+	std::vector<GLSharedPtr<GLGameObject>> children;
 
 	bool bVisible = true;
+
+	std::string name = "";
 	std::string layer = "Default";
 
 	bool bInitialized = false;

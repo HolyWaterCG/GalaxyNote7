@@ -28,7 +28,4 @@ public:
 	{
 		GLGameObject::Update(deltaTime);
 	}
-
-	int orbitDirection = 1;
-	float orbitSpeed = 1.0f;
 };

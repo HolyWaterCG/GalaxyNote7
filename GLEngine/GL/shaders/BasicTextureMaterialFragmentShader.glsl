@@ -91,7 +91,7 @@ vec3 ApplyDirectionalLight(DirectionalLight light, vec3 normal, vec3 viewDir)
         specular = light.specular * spec * material.specular;
     }
 
-    return (ambient + diffuse + specular);
+    return (ambient + diffuse);
 }
 
 vec3 ApplyPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir)
@@ -153,7 +153,7 @@ vec3 ApplySpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir)
     diffuse *= attenuation * intensity;
     specular *= attenuation * intensity;
 
-    return (ambient + diffuse + specular);
+    return (ambient + diffuse);
 }
 
 void main()

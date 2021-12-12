@@ -64,6 +64,10 @@ public:
 			{
 				keyString = "Enter";
 			}
+			else if (ch == 27)
+			{
+				keyString = "Escape";
+			}
 			else if (ch == ' ')
 			{
 				keyString = "Space";
