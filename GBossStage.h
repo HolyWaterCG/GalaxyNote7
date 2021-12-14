@@ -9,12 +9,13 @@
 #include "GBPlayer.h"
 #include "GBoss.h"
 #include "GPlayerUI.h"
+#include "GGameStage.h"
 
-class GBossStage : public GLGameObject
+class GBossStage : public GGameStage
 {
 public:
 	GConstructor(GBossStage)
-		: GSuperClassInitializer(GLGameObject)
+		: GSuperClassInitializer(GGameStage)
 	{
 
 	}
@@ -26,7 +27,7 @@ public:
 
 	void Update(float deltaTime) override
 	{
-		GLGameObject::Update(deltaTime);
+		GGameStage::Update(deltaTime);
 
 		if (this->IsEnded())
 		{
@@ -103,7 +104,7 @@ public:
 
 	void OnKeyDown(const std::string& key, int x, int y) override
 	{
-		GLGameObject::OnKeyDown(key, x, y);
+		GGameStage::OnKeyDown(key, x, y);
 
 		if (key == "Escape")
 		{
@@ -176,16 +177,6 @@ public:
 		}
 	}
 
-	bool IsEnded()
-	{
-		return this->bIsEnded;
-	}
-
-	void SetEnded(bool isEnded)
-	{
-		this->bIsEnded = isEnded;
-	}
-
 private:
 	GLSharedPtr<GBPlayer> player = nullptr;
 	GLSharedPtr<GPlayerUI> playerUI = nullptr;
@@ -196,6 +187,4 @@ private:
 	GLSharedPtr<GBossShooter> bossShooter = nullptr;
 
 	GLSharedPtr<GBoss> boss = nullptr;
-
-	bool bIsEnded = false;
 };

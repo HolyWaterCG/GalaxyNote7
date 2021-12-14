@@ -182,6 +182,7 @@ copy "$(SolutionDir)GLEngine\GL\shaders\*" "$(SolutionDir)shaders\" /Y</Command>
     <ClInclude Include="GCameraController.h" />
     <ClInclude Include="GDirectionalLight.h" />
     <ClInclude Include="GDodgeStage.h" />
+    <ClInclude Include="GGameStage.h" />
     <ClInclude Include="GGameWorld.h" />
     <ClInclude Include="GPhysicsObject.h" />
     <ClInclude Include="GBPlayer.h" />
