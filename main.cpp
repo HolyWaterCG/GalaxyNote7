@@ -8,6 +8,9 @@
 #include "GLEngine/GL/GL.h"
 
 #include "GBossStage.h"
+#include "GDodgeStage.h"
+
+#include "GGameWorld.h"
 
 int main(int argc, char* argv[])
 {
@@ -22,11 +25,11 @@ int main(int argc, char* argv[])
 	auto scene = GLCreate<GLScene>("TeamProject");
 	GLLoadScene(scene);
 
-	auto stage = GCreate(GBossStage);
-	scene->GetRoot()->AddChild(stage);
+	auto world = GCreate(GGameWorld);
+	scene->GetRoot()->AddChild(world);
 
 	scene->SetBackgroundColor(GLColor(0.0f, 0.0f, 0.0f));
-	stage->Initialize();
+	world->Initialize();
 
 	glutMainLoop();
 }

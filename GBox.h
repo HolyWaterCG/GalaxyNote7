@@ -2,18 +2,18 @@
 
 #include "GLEngine/GL/GL.h"
 
-class GBox : public GCube
+class GBox : public GLGameObject
 {
 public:
 	GConstructor(GBox)
-		: GSuperClassInitializer(GCube)
+		: GSuperClassInitializer(GLGameObject)
 	{
 
 	};
 
 	void Initialize() override
 	{
-		GCube::Initialize();
+		GLGameObject::Initialize();
 
 		auto shape = GCreate(GCube);
 		this->AddChild(shape);
@@ -62,17 +62,15 @@ public:
 	{
 		GLGameObject::Initialize();
 
-		for (int i = 0; i < itemBoxCnt; i++) {
+		for (int i = 0; i < itemBoxCnt; i++)
+		{
+			auto box = GCreate(GBox);
+			this->AddChild(box);
 
-			auto Cube = GCreate(GBox);
+			box->Initialize();
 
-			this->AddChild(Cube);
-
-			Cube->Initialize();
-
-			auto transform = Cube->GetTransform();
-			transform->SetPosition(Rand3v(-4.5f, 4.5f, 0.f, 0.f, -4.5f, 4.5f));
-			
+			auto boxTransform = box->GetTransform();
+			boxTransform->SetPosition(Rand3v(-4.5f, 4.5f, 0.f, 0.f, -4.5f, 4.5f));			
 		}
 	}
 

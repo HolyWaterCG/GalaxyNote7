@@ -28,6 +28,11 @@ public:
 	{
 		GLGameObject::Update(deltaTime);
 
+		if (this->IsEnded())
+		{
+			return;
+		}
+
 		this->boss->SetPlayerPosition(this->player->GetTransform()->GetPosition());
 
 		auto& playerLeftBullets = this->playerLeftShooter->GetBullets();
@@ -83,6 +88,12 @@ public:
 		if (this->player->GetHP() <= 0.0f)
 		{
 			this->Reset();
+			return;
+		}
+
+		if (this->boss->GetHP() <= 0.0f)
+		{
+			this->SetEnded(true);
 			return;
 		}
 
@@ -145,6 +156,36 @@ public:
 		this->boss = boss;
 	}
 
+	void Reset(int round)
+	{
+		this->Reset();
+
+		if (round == 1)
+		{
+			this->boss->SetMaxHP(10000.0f);
+			this->boss->SetHP(10000.0f);
+			this->boss->SetRandomShotCooldown(0.1f);
+			this->boss->SetShotCooldown(0.8f);
+		}
+		else if (round == 2)
+		{
+			this->boss->SetMaxHP(15000.0f);
+			this->boss->SetHP(15000.0f);
+			this->boss->SetRandomShotCooldown(0.05f);
+			this->boss->SetShotCooldown(0.5f);
+		}
+	}
+
+	bool IsEnded()
+	{
+		return this->bIsEnded;
+	}
+
+	void SetEnded(bool isEnded)
+	{
+		this->bIsEnded = isEnded;
+	}
+
 private:
 	GLSharedPtr<GBPlayer> player = nullptr;
 	GLSharedPtr<GPlayerUI> playerUI = nullptr;
@@ -155,4 +196,6 @@ private:
 	GLSharedPtr<GBossShooter> bossShooter = nullptr;
 
 	GLSharedPtr<GBoss> boss = nullptr;
+
+	bool bIsEnded = false;
 };

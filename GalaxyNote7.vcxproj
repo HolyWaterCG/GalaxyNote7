@@ -176,11 +176,16 @@ copy "$(SolutionDir)GLEngine\GL\shaders\*" "$(SolutionDir)shaders\" /Y</Command>
     <ClInclude Include="GBossRandomShooter.h" />
     <ClInclude Include="GBossShooter.h" />
     <ClInclude Include="GBBullet.h" />
+    <ClInclude Include="GBoundary.h" />
+    <ClInclude Include="GBullet.h" />
     <ClInclude Include="GBulletShooter.h" />
     <ClInclude Include="GCameraController.h" />
     <ClInclude Include="GDirectionalLight.h" />
+    <ClInclude Include="GDodgeStage.h" />
+    <ClInclude Include="GGameWorld.h" />
     <ClInclude Include="GPhysicsObject.h" />
     <ClInclude Include="GBPlayer.h" />
+    <ClInclude Include="GPlayer.h" />
     <ClInclude Include="GPlayerBulletShooter.h" />
     <ClInclude Include="GPlayerCameraController.h" />
     <ClInclude Include="GPlayerUI.h" />

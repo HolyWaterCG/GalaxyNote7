@@ -140,6 +140,26 @@ public:
 		this->playerPosition = playerPosition;
 	}
 
+	float GetRandomShotCooldown()
+	{
+		return this->randomShootCooldown;
+	}
+
+	float GetShotCooldown()
+	{
+		return this->shootCooldown;
+	}
+
+	void SetRandomShotCooldown(float cooldown)
+	{
+		this->randomShootCooldown = cooldown;
+	}
+
+	void SetShotCooldown(float cooldown)
+	{
+		this->shootCooldown = cooldown;
+	}
+
 private:
 
 	float hp = 10000.0f;

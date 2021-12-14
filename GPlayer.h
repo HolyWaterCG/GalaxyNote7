@@ -5,26 +5,18 @@
 #include "Helpers.h"
 #include "GPhysicsObject.h"
 
-class GPlayer : public GPhysicsObject
+class GPlayer : public GLGameObject
 {
 public:
 	GConstructor(GPlayer)
-		: GSuperClassInitializer(GPhysicsObject)
+		: GSuperClassInitializer(GLGameObject)
 	{
 
 	}
 
 	void Initialize() override
 	{
-		GPhysicsObject::Initialize();
-
-		auto scene = GLGetCurrentScene();
-
-		this->SetBody(scene->GetPhysics()->CreateRigidBody(this->GetTransform()));
-		this->collisionShape = scene->GetPhysics()->CreateBoxShape(glm::vec3(0.2f));
-
-		this->GetBody()->setType(GLBodyType::STATIC);
-		this->GetBody()->enableGravity(false);
+		GLGameObject::Initialize();
 
 		auto shape = GCreate(GLGameObject);
 		this->AddChild(shape);
@@ -34,12 +26,11 @@ public:
 		auto transform = this->GetTransform();
 		transform->SetScale(0.2f, 0.2f, 0.2f);
 
-
 		auto meshRenderer = this->GetMeshRenderer();
 		auto material = meshRenderer->GetMaterial();
 
-		auto mesh = GLMeshLoader::Load("resources/Airship.obj");
-		auto texture = GLTextureLoader::Load("resources/Steel3.png");
+		auto mesh = GLMeshLoader::Load("resources/Aircraft.obj");
+		auto texture = GLTextureLoader::Load("resources/Aircraft.jpg");
 
 		meshRenderer->SetMesh(mesh);
 		material->SetDiffuseMap(texture);
@@ -48,11 +39,11 @@ public:
 
 	void OnKeyDown(const std::string& key, int x, int y) override
 	{
-		GPhysicsObject::OnKeyDown(key, x, y);
+		GLGameObject::OnKeyDown(key, x, y);
 
 		auto transform = this->GetTransform();
 
-		if (key == "8")
+		if (key == "Up")
 		{
 			if (this->moveSpeed.z != -1.0f)
 			{
@@ -69,7 +60,7 @@ public:
 				}
 			}
 		}
-		else if (key == "5")
+		else if (key == "Down")
 		{
 			if (this->moveSpeed.z != 1.0f)
 			{
@@ -86,7 +77,7 @@ public:
 				}
 			}
 		}
-		else if (key == "4")
+		else if (key == "Left")
 		{
 			if (this->moveSpeed.x != -1.0f)
 			{
@@ -104,7 +95,7 @@ public:
 				}
 			}
 		}
-		else if (key == "6")
+		else if (key == "Right")
 		{
 			if (this->moveSpeed.x != 1.0f)
 			{
@@ -122,18 +113,18 @@ public:
 				}
 			}
 		}
-
-		this->UpdateBody();
 	}
 
 	void OnKeyUp(const std::string& key, int x, int y) override
 	{
-		GPhysicsObject::OnKeyUp(key, x, y);
+		GLGameObject::OnKeyUp(key, x, y);
+
+
 	}
 
 	void Update(float deltaTime) override
 	{
-		GPhysicsObject::Update(deltaTime);
+		GLGameObject::Update(deltaTime);
 
 		auto transform = this->GetTransform();
 
@@ -156,8 +147,6 @@ public:
 		{
 			transform->Translate(this->moveSpeed.x * deltaTime * side);
 		}
-		
-		this->UpdateBody();
 	}
 
 	void Reset()
@@ -171,6 +160,6 @@ private:
 	glm::vec3 moveSpeed = glm::vec3(0.0f);
 	glm::vec3 back = glm::vec3(0.0f, 0.0f, 1.0f);
 	glm::vec3 side = glm::vec3(1.0f, 0.0f, 0.0f);
-	GLBoxShape* collisionShape;
+
 	int check = 0;
 };
