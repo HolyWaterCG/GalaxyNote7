@@ -162,6 +162,16 @@
     <ClInclude Include="GL\GLTransform.h" />
     <ClInclude Include="GL\GLWindow.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="GL\shaders\BasicFragmentShader.glsl" />
+    <None Include="GL\shaders\BasicMaterialFragmentShader.glsl" />
+    <None Include="GL\shaders\BasicMaterialVertexShader.glsl" />
+    <None Include="GL\shaders\BasicTextureFragmentShader.glsl" />
+    <None Include="GL\shaders\BasicTextureMaterialFragmentShader.glsl" />
+    <None Include="GL\shaders\BasicTextureMaterialVertexShader.glsl" />
+    <None Include="GL\shaders\BasicTextureVertexShader.glsl" />
+    <None Include="GL\shaders\BasicVertexShader.glsl" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

@@ -31,9 +31,6 @@ public:
 
 		auto transform = this->GetTransform();
 
-		transform->RotateAround( //공전 각도만큼
-			glm::vec3(0.0f, 0.0f, 0.0f), deltaTime * this->rotatingAroundCenter, glm::vec3(0.0f, 1.0f, 0.0f));
-
 		transform->Rotate(deltaTime * this->rotating, glm::vec3(0.0f, 1.0f, 0.0f)); // 자전
 
 		transform->Translate(glm::vec3(this->directions) * deltaTime); 
@@ -79,15 +76,6 @@ public:
 		{
 			ToggleDirection(this->rotatingAroundCenter, -1);
 		}
-		else if (key == "a")
-		{
-			this->rotatingAroundCenter = 1; 
-		}
-		else if (key == "A")
-		{
-			this->rotatingAroundCenter = 0;
-		}
-
 		else if (key == "s" || key == "S")
 		{
 			this->Stop();

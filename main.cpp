@@ -7,28 +7,29 @@
 
 #include "GLEngine/GL/GL.h"
 
-#include "GWorld.h"
+#include "GBossStage.h"
+#include "GDodgeStage.h"
+
+#include "GGameWorld.h"
 
 int main(int argc, char* argv[])
 {
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
 
-	GLSetWindow(GLCreate<GLWindow>(0, 0, 800, 800, "Training27"));
+	GLSetWindow(GLCreate<GLWindow>(0, 0, 800, 800, "TeamProject"));
 
 	InitializeGLEW();
-
 	glEnable(GL_DEPTH_TEST);
 
-	auto scene = GLCreate<GLScene>("Training27");
+	auto scene = GLCreate<GLScene>("TeamProject");
 	GLLoadScene(scene);
 
-	auto dotge = GCreate(GWorld);
-	scene->GetRoot()->AddChild(dotge);
+	auto world = GCreate(GGameWorld);
+	scene->GetRoot()->AddChild(world);
 
 	scene->SetBackgroundColor(GLColor(0.0f, 0.0f, 0.0f));
-
-	dotge->Initialize();
+	world->Initialize();
 
 	glutMainLoop();
 }

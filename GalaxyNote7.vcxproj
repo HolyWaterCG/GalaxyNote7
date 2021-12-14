@@ -95,15 +95,20 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>GLEngine\ReactPhysics3D\Debug;GLEngine\GLFW\lib-vc2019;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glew32.lib;freeglut.lib;glfw3.lib;reactphysics3d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glew32.lib;freeglut.lib;reactphysics3d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
-      <Command>if not exist "$(SolutionDir)Debug\Shader\" mkdir "$(SolutionDir)Debug\Shader\"
-if not exist "$(ProjectDir)Shader\" mkdir "$(ProjectDir)Shader\"
-xcopy "$(SolutionDir)\GLEngine\GL\Shader\*" "$(SolutionDir)Debug\Shader\" /Y
-xcopy "$(SolutionDir)\GLEngine\GL\Shader\*" "$(ProjectDir)Shader\" /Y
-</Command>
+      <Command>
+      </Command>
     </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>if not exist "$(TargetDir)shaders\" mkdir "$(TargetDir)shaders\"
+if not exist "$(TargetDir)resources\" mkdir "$(TargetDir)resources\"
+if not exist "$(SolutionDir)shaders\" mkdir "$(SolutionDir)shaders\"
+copy "$(SolutionDir)GLEngine\GL\shaders\*" "$(TargetDir)shaders\" /Y
+copy "$(SolutionDir)resources\*" "$(TargetDir)resources\" /Y
+copy "$(SolutionDir)GLEngine\GL\shaders\*" "$(SolutionDir)shaders\" /Y</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -121,15 +126,20 @@ xcopy "$(SolutionDir)\GLEngine\GL\Shader\*" "$(ProjectDir)Shader\" /Y
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>GLEngine\ReactPhysics3D\Release\lib;GLEngine\GLFW\lib-vc2019;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glew32.lib;freeglut.lib;glfw3.lib;reactphysics3d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glew32.lib;freeglut.lib;reactphysics3d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
-      <Command>if not exist "$(SolutionDir)Release\Shader\" mkdir "$(SolutionDir)Release\Shader\"
-if not exist "$(ProjectDir)Shader\" mkdir "$(ProjectDir)Shader\"
-xcopy "$(SolutionDir)\GLEngine\GL\Shader\*" "$(SolutionDir)Release\Shader\" /Y
-xcopy "$(SolutionDir)\GLEngine\GL\Shader\*" "$(ProjectDir)Shader\" /Y
-</Command>
+      <Command>
+      </Command>
     </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>if not exist "$(TargetDir)shaders\" mkdir "$(TargetDir)shaders\"
+if not exist "$(TargetDir)resources\" mkdir "$(TargetDir)resources\"
+if not exist "$(SolutionDir)shaders\" mkdir "$(SolutionDir)shaders\"
+copy "$(SolutionDir)GLEngine\GL\shaders\*" "$(TargetDir)shaders\" /Y
+copy "$(SolutionDir)resources\*" "$(TargetDir)resources\" /Y
+copy "$(SolutionDir)GLEngine\GL\shaders\*" "$(SolutionDir)shaders\" /Y</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -160,13 +170,29 @@ xcopy "$(SolutionDir)\GLEngine\GL\Shader\*" "$(ProjectDir)Shader\" /Y
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="GAircraft.h" />
+    <ClInclude Include="GAircraftController.h" />
+    <ClInclude Include="GBoss.h" />
+    <ClInclude Include="GBossRandomShooter.h" />
+    <ClInclude Include="GBossShooter.h" />
+    <ClInclude Include="GBBullet.h" />
+    <ClInclude Include="GBoundary.h" />
+    <ClInclude Include="GBullet.h" />
+    <ClInclude Include="GBulletShooter.h" />
     <ClInclude Include="GCameraController.h" />
-    <ClInclude Include="GFloor.h" />
-    <ClInclude Include="GFractalPhyramid.h" />
-    <ClInclude Include="GPointLightController.h" />
-    <ClInclude Include="GSnowFallEffect.h" />
-    <ClInclude Include="GSolarSystem.h" />
-    <ClInclude Include="GWorld.h" />
+    <ClInclude Include="GDirectionalLight.h" />
+    <ClInclude Include="GDodgeStage.h" />
+    <ClInclude Include="GGameWorld.h" />
+    <ClInclude Include="GPhysicsObject.h" />
+    <ClInclude Include="GBPlayer.h" />
+    <ClInclude Include="GPlayer.h" />
+    <ClInclude Include="GPlayerBulletShooter.h" />
+    <ClInclude Include="GPlayerCameraController.h" />
+    <ClInclude Include="GPlayerUI.h" />
+    <ClInclude Include="GPointLight.h" />
+    <ClInclude Include="GSkybox.h" />
+    <ClInclude Include="GSpacecraft.h" />
+    <ClInclude Include="GBossStage.h" />
     <ClInclude Include="Helpers.h" />
   </ItemGroup>
   <ItemGroup>

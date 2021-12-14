@@ -2,49 +2,38 @@
 
 #include "GLEngine/GL/GL.h"
 
-class GBullet : public GUVSphere
+class GBullet : public GLGameObject
 {
 public:
 	GConstructor(GBullet)
-		: GSuperClassInitializer(GUVSphere)
+		: GSuperClassInitializer(GLGameObject)
 	{
 
 	}
 
 	void Initialize() override
 	{
-		GUVSphere::Initialize();
-
-		/*auto scene = GLGetCurrentScene();
-
-		this->SetBody(scene->GetPhysics()->CreateRigidBody(this->GetTransform()));
-		this->collisionShape = scene->GetPhysics()->CreateBoxShape(glm::vec3(0.2f));
-
-		this->GetBody()->setType(GLBodyType::STATIC);*/
-
-		auto shape = GCreate(GUVSphere);
-		this->AddChild(shape);
-
-		shape->Initialize();
+		GLGameObject::Initialize();
 
 		auto transform = this->GetTransform();
-		transform->SetScale(0.1f, 0.1f, 0.1f);
+		transform->SetScale(0.05f, 0.05f, 0.05f);
 
-		/*this->UpdateBody();*/
+		auto mesh = GLMeshLoader::Load("resources/Sphere.obj");
 
-		RandMaterial(shape);
+		auto meshRenderer = this->GetMeshRenderer();
+		meshRenderer->SetMesh(mesh);
 
+		RandMaterial(this);
 	}
 
 	void Update(float deltaTime) override
 	{
-		//GPhysicsObject::Update(deltaTime);
+		GLGameObject::Update(deltaTime);
 
 		auto transform = this->GetTransform();
 
 		if (this->IsMoving())
 		{
-
 			if (GetTransform()->GetPosition().x >= 5.f || GetTransform()->GetPosition().x <= -5.f) 
 			{
 				speed.x *= dir;
@@ -56,20 +45,19 @@ public:
 			}
 
 			transform->Translate(this->speed * deltaTime);
-
 		}
-
-		//this->UpdateBody();
 	}
 
 	bool IsMoving()
 	{
 		return this->bIsMoving;
 	}
+
 	void SetDir(float dir) 
 	{ 
 		this->dir = dir;
 	}
+
 	void SetMoving(bool moving)
 	{
 		this->bIsMoving = moving;
@@ -82,9 +70,7 @@ public:
 
 	void SetSpeed(glm::vec3 speed)
 	{
-
 		this->speed += speed;
-
 	}
 
 private:
@@ -109,42 +95,39 @@ public:
 
 		for (int i = 0; i < this->BulletCount; i++) {
 
-			bullet[i] = GCreate(GBullet);
+			auto bullet = GCreate(GBullet);
 
-			this->AddChild(bullet[i]);
+			this->AddChild(bullet);
+			this->bullets.push_back(bullet);
 
-			bullet[i]->Initialize();
+			bullet->Initialize();
 
-			auto bulletTransform = bullet[i]->GetTransform();
+			auto bulletTransform = bullet->GetTransform();
 			bulletTransform->SetPosition(Rand3v(-4.5f, 4.5f, 0.f, 0.f, -4.5f, 4.5f));
-			//bullet->UpdateBody();
 		}
 	}
 
 	void BulletInit(int size)
 	{
-		for (int i = BulletCount; i < this->BulletCount + size; i++) {
+		for (int i = BulletCount; i < this->BulletCount + size; i++)
+		{
+		    auto bullet = GCreate(GBullet);
 
-			bullet[i] = GCreate(GBullet);
+			this->AddChild(bullet);
+			this->bullets.push_back(bullet);
 
-			this->AddChild(bullet[i]);
+			bullet->Initialize();
 
-			bullet[i]->Initialize();
-
-			auto bulletTransform = bullet[i]->GetTransform();
+			auto bulletTransform = bullet->GetTransform();
 			bulletTransform->SetPosition(Rand3v(-4.5f, 4.5f, 0.f, 0.f, -4.5f, 4.5f));
 		}
 	}
 
-	void ChageStage()
+	void ChangeStage()
 	{
-
 		BulletCnt(20);
 		SetSpeed(glm::vec3(0.3f, 0.f, 0.3f));
-
 	}
-
-
 
 	void BulletCnt(int BulletCnt)
 	{
@@ -157,18 +140,22 @@ public:
 	{
 		for (int i = 0; i < MaxBulletCount; ++i)
 		{
-			bullet[i]->SetSpeed(speed);
+			bullets[i]->SetSpeed(speed);
 		}
 	}
 
 	void Update(GLfloat deltaTime) override
 	{
-
 		GLGameObject::Update(deltaTime);
-
 	}
+
+	std::vector<GLSharedPtr<GBullet>>& GetBullets()
+	{
+		return this->bullets;
+	}
+
 private:
-	int BulletCount = 100;
+	int BulletCount = 50;
 	int MaxBulletCount = BulletCount;
-	std::shared_ptr<GBullet> bullet[120];
+	std::vector<GLSharedPtr<GBullet>> bullets;
 };

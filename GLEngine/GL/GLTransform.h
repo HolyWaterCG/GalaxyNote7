@@ -32,12 +32,12 @@ public:
 
 	void Update()
 	{
-		UpdatePosition();
-		UpdateRotation();
-		UpdateScale();
-
-		UpdateLocalToWorldMatrix();
 		UpdateWorldToLocalMatrix();
+		UpdateLocalToWorldMatrix();
+
+		UpdateScale();
+		UpdateRotation();
+		UpdatePosition();
 	}
 
 	void UpdatePosition()
