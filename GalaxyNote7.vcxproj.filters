@@ -39,7 +39,7 @@
     <ClInclude Include="GDirectionalLight.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="GPlayer.h">
+    <ClInclude Include="GBPlayer.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="GBoss.h">
@@ -63,10 +63,10 @@
     <ClInclude Include="GBossRandomShooter.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="GBullet.h">
+    <ClInclude Include="GBBullet.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="GBossSpiralShooter.h">
+    <ClInclude Include="GBossShooter.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="GBulletShooter.h">

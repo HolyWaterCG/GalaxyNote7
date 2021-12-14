@@ -5,7 +5,7 @@
 #include "GPhysicsObject.h"
 #include "GSpacecraft.h"
 #include "GBossRandomShooter.h"
-#include "GBossSpiralShooter.h"
+#include "GBossShooter.h"
 
 class GBoss : public GPhysicsObject
 {
@@ -27,27 +27,27 @@ public:
 
 		auto spacecraft = GCreate(GSpacecraft);
 		auto randomShooter = GCreate(GBossRandomShooter);
-		auto spiralShooter = GCreate(GBossSpiralShooter);
+		auto shooter = GCreate(GBossShooter);
 
 		this->AddChild(spacecraft);
-		this->world->AddChildren({ randomShooter, spiralShooter });
+		this->world->AddChildren({ randomShooter, shooter });
 
 		spacecraft->Initialize();
 		randomShooter->Initialize();
-		spiralShooter->Initialize();
+		shooter->Initialize();
 
 		randomShooter->SetName("BossRandomShooter");
-		spiralShooter->SetName("BossSpiralShooter");
+		shooter->SetName("BossShooter");
 
 		randomShooter->SetSpeed(5.0f);
-		spiralShooter->SetSpeed(5.0f);
+		shooter->SetSpeed(15.0f);
 
 		randomShooter->SetMaterialType("Emerald");
-		randomShooter->SetMaterialType("Pearl");
+		shooter->SetMaterialType("Pearl");
 
 		this->spacecraft = spacecraft;
 		this->randomShooter = randomShooter;
-		this->spiralShooter = spiralShooter;
+		this->shooter = shooter;
 
 		auto scene = this->GetScene();
 
@@ -68,18 +68,23 @@ public:
 		auto transform = this->GetTransform();
 
 		this->currentRandomShootCooldown -= deltaTime;
-		this->currentSpiralShotCooldown -= deltaTime;
+		this->currentShotCooldown -= deltaTime;
+
+		auto position = transform->GetPosition();
+		auto playerDirection = glm::normalize(this->playerPosition - position);
 
 		if (this->currentRandomShootCooldown < 0.0f)
 		{
 			this->currentRandomShootCooldown = this->randomShootCooldown;
 
-			this->randomShooter->Shoot(transform->GetPosition(), glm::normalize(playerPosition - transform->GetPosition()));
+			this->randomShooter->Shoot(position, playerDirection);
 		}
 
-		if (this->currentSpiralShotCooldown < 0.0f)
+		if (this->currentShotCooldown < 0.0f)
 		{
-			this->currentSpiralShotCooldown = this->randomShootCooldown;
+			this->currentShotCooldown = this->shootCooldown;
+
+			this->shooter->Shoot(position, playerDirection);
 		}
 
 		this->UpdateBody();
@@ -142,17 +147,17 @@ private:
 
 	float atk = 25.0f;
 
-	float currentRandomShootCooldown = 0.0f;
-	float currentSpiralShotCooldown = 0.0f;
+	float currentRandomShootCooldown = 0.1f;
+	float currentShotCooldown = 0.8f;
 	float randomShootCooldown = 0.1f;
-	float spiralShootCooldown = 2.0f;
+	float shootCooldown = 0.8f;
 
 	glm::vec3 playerPosition = glm::vec3(0.0f);
 
 	GLGameObject* world = nullptr;
 	GLSharedPtr<GSpacecraft> spacecraft = nullptr;
 	GLSharedPtr<GBossRandomShooter> randomShooter = nullptr;
-	GLSharedPtr<GBossSpiralShooter> spiralShooter = nullptr;
+	GLSharedPtr<GBossShooter> shooter = nullptr;
 
 	GLBoxShape* collisionShape;
 	GLCollider* collider;

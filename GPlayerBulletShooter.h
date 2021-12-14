@@ -2,7 +2,6 @@
 
 #include "GLEngine/GL/GL.h"
 
-#include "GBullet.h"
 #include "GBulletShooter.h"
 
 class GPlayerShooter : public GBulletShooter
