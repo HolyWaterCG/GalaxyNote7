@@ -2,13 +2,13 @@
 
 #include "GLEngine/GL/GL.h"
 
-#include "GBullet.h"
+#include "GBBullet.h"
 #include "GBulletShooter.h"
 
-class GBossSpiralShooter : public GBulletShooter
+class GBossShooter : public GBulletShooter
 {
 public:
-    GConstructor(GBossSpiralShooter)
+    GConstructor(GBossShooter)
         : GSuperClassInitializer(GBulletShooter)
     {
 

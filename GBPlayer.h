@@ -10,16 +10,16 @@
 #include "GPlayerBulletShooter.h"
 #include "GPlayerUI.h"
 
-class GPlayer : public GPhysicsObject
+class GBPlayer : public GPhysicsObject
 {
 public:
-	GConstructor(GPlayer)
+	GConstructor(GBPlayer)
 		: GSuperClassInitializer(GPhysicsObject)
 	{
 
 	}
 
-	~GPlayer()
+	~GBPlayer()
 	{
 		auto scene = this->GetScene();
 

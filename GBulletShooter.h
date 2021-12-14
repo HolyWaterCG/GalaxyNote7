@@ -2,7 +2,7 @@
 
 #include "GLEngine/GL/GL.h"
 
-#include "GBullet.h"
+#include "GBBullet.h"
 
 class GBulletShooter : public GLGameObject
 {
@@ -63,9 +63,9 @@ public:
         this->speed = speed;
     }
 
-    GLSharedPtr<GBullet> CreateBullet()
+    GLSharedPtr<GBBullet> CreateBullet()
     {
-        auto bullet = GCreate(GBullet);
+        auto bullet = GCreate(GBBullet);
         this->AddChild(bullet);
         this->bullets.push_back(bullet);
 
@@ -77,7 +77,7 @@ public:
         return bullet;
     }
 
-    std::vector<GLSharedPtr<GBullet>>& GetBullets()
+    std::vector<GLSharedPtr<GBBullet>>& GetBullets()
     {
         return this->bullets;
     }
@@ -105,5 +105,5 @@ private:
 
     std::string materialType = "Ruby";
 
-    std::vector<GLSharedPtr<GBullet>> bullets;
+    std::vector<GLSharedPtr<GBBullet>> bullets;
 };
